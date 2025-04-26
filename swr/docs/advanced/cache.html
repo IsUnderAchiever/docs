@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charSet="utf-8" />
+  <title>缓存 – SWR</title>
+  <meta name="robots" content="index,follow" />
+  <meta property="og:title" content="缓存 – SWR" />
+  <meta name="theme-color" content="#111" media="(prefers-color-scheme: dark)" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <style>
+    :root {
+      --nextra-primary-hue: 212deg;
+      --nextra-navbar-height: 4rem;
+      --nextra-menu-height: 3.75rem;
+      --nextra-banner-height: 2.5rem;
+    }
+
+    .dark {
+      --nextra-primary-hue: 204deg;
+    }
+  </style>
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+  <link rel="manifest" href="/favicon/site.webmanifest" />
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#000000" />
+  <meta http-equiv="Content-Language" content="zh-CN" />
+  <meta name="msapplication-TileColor" content="#ffffff" />
+  <meta name="apple-mobile-web-app-title" content="SWR" />
+  <meta name="description" content="SWR 是一个用于数据请求的 React Hooks 库。SWR 首先从缓存中返回数据（过期的），然后发送请求（重新验证），最后携带最新数据再次更新。" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@vercel" />
+  <meta name="twitter:image" content="https://swr-card.vercel.app/?title=%E7%BC%93%E5%AD%98" />
+  <meta property="og:title" content="缓存 – SWR" />
+  <meta property="og:description"
+    content="SWR 是一个用于数据请求的 React Hooks 库。SWR 首先从缓存中返回数据（过期的），然后发送请求（重新验证），最后携带最新数据再次更新。" />
+  <meta property="og:image" content="https://swr-card.vercel.app/?title=%E7%BC%93%E5%AD%98" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta name="next-head-count" content="24" />
+  <link rel="preload" href="/_next/static/css/ffcf7101c49b2495.css" as="style" />
+  <link rel="stylesheet" href="/_next/static/css/ffcf7101c49b2495.css" data-n-g="" /><noscript data-n-css=""></noscript>
+  <script defer="" nomodule="" src="/_next/static/chunks/polyfills-42372ed130431b0a.js"></script>
+  <script src="/_next/static/chunks/webpack-36d12a75f0098f30.js" defer=""></script>
+  <script src="/_next/static/chunks/framework-0cbe3b56a5f66701.js" defer=""></script>
+  <script src="/_next/static/chunks/main-196bb1973d4e1742.js" defer=""></script>
+  <script src="/_next/static/chunks/pages/_app-17ddc54614a24119.js" defer=""></script>
+  <script src="/_next/static/chunks/17-29f9b955bf7e0990.js" defer=""></script>
+  <script src="/_next/static/chunks/pages/docs/advanced/cache-7a706e27f0580520.js" defer=""></script>
+  <script src="/_next/static/XgLf1WDqIYi960Idv4YTM/_buildManifest.js" defer=""></script>
+  <script src="/_next/static/XgLf1WDqIYi960Idv4YTM/_ssgManifest.js" defer=""></script>
+</head>
+
+<body>
+  <div id="__next">
+    <script>!function () { try { var d = document.documentElement, c = d.classList; c.remove('light', 'dark'); var e = localStorage.getItem('theme'); if ('system' === e || (!e && true)) { var t = '(prefers-color-scheme: dark)', m = window.matchMedia(t); if (m.media !== t || m.matches) { d.style.colorScheme = 'dark'; c.add('dark') } else { d.style.colorScheme = 'light'; c.add('light') } } else if (e) { c.add(e || '') } if (e === 'light' || e === 'dark') d.style.colorScheme = e } catch (e) { } }()</script>
+    <div dir="ltr">
+      <script>document.documentElement.setAttribute('dir', 'ltr')</script>
+      <div class="nextra-nav-container nx-sticky nx-top-0 nx-z-20 nx-w-full nx-bg-transparent print:nx-hidden">
+        <div
+          class="nextra-nav-container-blur nx-pointer-events-none nx-absolute nx-z-[-1] nx-h-full nx-w-full nx-bg-white dark:nx-bg-dark nx-shadow-[0_2px_4px_rgba(0,0,0,.02),0_1px_0_rgba(0,0,0,.06)] dark:nx-shadow-[0_-1px_0_rgba(255,255,255,.1)_inset] contrast-more:nx-shadow-[0_0_0_1px_#000] contrast-more:dark:nx-shadow-[0_0_0_1px_#fff]">
+        </div>
+        <nav
+          class="nx-mx-auto nx-flex nx-h-[var(--nextra-navbar-height)] nx-max-w-[90rem] nx-items-center nx-justify-end nx-gap-2 nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]">
+          <a class="nx-flex nx-items-center hover:nx-opacity-75 ltr:nx-mr-auto rtl:nx-ml-auto" href="/"><svg height="12"
+              viewBox="0 0 291 69" fill="none">
+              <path
+                d="M0 36.53c.07 17.6 14.4 32.01 32.01 32.01a32.05 32.05 0 0032.01-32V32a13.2 13.2 0 0123.4-8.31h20.7A32.07 32.07 0 0077.2 0a32.05 32.05 0 00-32 32.01v4.52A13.2 13.2 0 0132 49.71a13.2 13.2 0 01-13.18-13.18 3.77 3.77 0 00-3.77-3.77H3.76A3.77 3.77 0 000 36.53zM122.49 68.54a32.14 32.14 0 01-30.89-23.7h20.67a13.16 13.16 0 0023.4-8.3V32A32.05 32.05 0 01167.68 0c17.43 0 31.64 14 32 31.33l.1 5.2a13.2 13.2 0 0023.4 8.31h20.7a32.07 32.07 0 01-30.91 23.7c-17.61 0-31.94-14.42-32.01-32l-.1-4.7v-.2a13.2 13.2 0 00-13.18-12.81 13.2 13.2 0 00-13.18 13.18v4.52a32.05 32.05 0 01-32.01 32.01zM247.94 23.7a13.16 13.16 0 0123.4 8.31 3.77 3.77 0 003.77 3.77h11.3a3.77 3.77 0 003.76-3.77A32.05 32.05 0 00258.16 0a32.07 32.07 0 00-30.92 23.7h20.7z"
+                fill="currentColor"></path>
+            </svg><span class="mx-2 font-extrabold hidden md:inline select-none"
+              title="SWR: 用于数据请求的 React Hooks 库">SWR</span></a>
+          <div class="nextra-search nx-relative md:nx-w-64 nx-hidden md:nx-inline-block mx-min-w-[200px]">
+            <div
+              class="nx-relative nx-flex nx-items-center nx-text-gray-900 contrast-more:nx-text-gray-800 dark:nx-text-gray-300 contrast-more:dark:nx-text-gray-300">
+              <input spellcheck="false"
+                class="nx-block nx-w-full nx-appearance-none nx-rounded-lg nx-px-3 nx-py-2 nx-transition-colors nx-text-base nx-leading-tight md:nx-text-sm nx-bg-black/[.05] dark:nx-bg-gray-50/10 focus:nx-bg-white dark:focus:nx-bg-dark placeholder:nx-text-gray-500 dark:placeholder:nx-text-gray-400 contrast-more:nx-border contrast-more:nx-border-current"
+                type="search" placeholder="搜索文档..." value="" />
+            </div>
+          </div><a href="https://github.com/vercel/swr" target="_blank" rel="noreferrer"
+            class="nx-p-2 nx-text-current"><svg width="24" height="24" fill="currentColor" viewBox="3 3 18 18">
+              <title>GitHub</title>
+              <path
+                d="M12 3C7.0275 3 3 7.12937 3 12.2276C3 16.3109 5.57625 19.7597 9.15374 20.9824C9.60374 21.0631 9.77249 20.7863 9.77249 20.5441C9.77249 20.3249 9.76125 19.5982 9.76125 18.8254C7.5 19.2522 6.915 18.2602 6.735 17.7412C6.63375 17.4759 6.19499 16.6569 5.8125 16.4378C5.4975 16.2647 5.0475 15.838 5.80124 15.8264C6.51 15.8149 7.01625 16.4954 7.18499 16.7723C7.99499 18.1679 9.28875 17.7758 9.80625 17.5335C9.885 16.9337 10.1212 16.53 10.38 16.2993C8.3775 16.0687 6.285 15.2728 6.285 11.7432C6.285 10.7397 6.63375 9.9092 7.20749 9.26326C7.1175 9.03257 6.8025 8.08674 7.2975 6.81794C7.2975 6.81794 8.05125 6.57571 9.77249 7.76377C10.4925 7.55615 11.2575 7.45234 12.0225 7.45234C12.7875 7.45234 13.5525 7.55615 14.2725 7.76377C15.9937 6.56418 16.7475 6.81794 16.7475 6.81794C17.2424 8.08674 16.9275 9.03257 16.8375 9.26326C17.4113 9.9092 17.76 10.7281 17.76 11.7432C17.76 15.2843 15.6563 16.0687 13.6537 16.2993C13.98 16.5877 14.2613 17.1414 14.2613 18.0065C14.2613 19.2407 14.25 20.2326 14.25 20.5441C14.25 20.7863 14.4188 21.0746 14.8688 20.9824C16.6554 20.364 18.2079 19.1866 19.3078 17.6162C20.4077 16.0457 20.9995 14.1611 21 12.2276C21 7.12937 16.9725 3 12 3Z">
+              </path>
+            </svg><span class="nx-sr-only">GitHub</span><span class="nx-sr-only"> (opens in a new tab)</span></a><button
+            type="button" aria-label="Menu"
+            class="nextra-hamburger -nx-mr-2 nx-rounded nx-p-2 active:nx-bg-gray-400/20 md:nx-hidden"><svg fill="none"
+              width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" class="">
+              <g>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16"></path>
+              </g>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16"></path>
+              <g>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 18h16"></path>
+              </g>
+            </svg></button>
+        </nav>
+      </div>
+      <div class="nx-mx-auto nx-flex nx-max-w-[90rem]">
+        <div class="motion-reduce:nx-transition-none [transition:background-color_1.5s_ease] nx-bg-transparent"></div>
+        <aside
+          class="nextra-sidebar-container nx-flex nx-flex-col md:nx-top-16 md:nx-shrink-0 motion-reduce:nx-transform-none nx-transform-gpu nx-transition-all nx-ease-in-out print:nx-hidden md:nx-w-64 md:nx-sticky md:nx-self-start max-md:[transform:translate3d(0,-100%,0)]">
+          <div class="nx-px-4 nx-pt-4 md:nx-hidden">
+            <div class="nextra-search nx-relative md:nx-w-64">
+              <div
+                class="nx-relative nx-flex nx-items-center nx-text-gray-900 contrast-more:nx-text-gray-800 dark:nx-text-gray-300 contrast-more:dark:nx-text-gray-300">
+                <input spellcheck="false"
+                  class="nx-block nx-w-full nx-appearance-none nx-rounded-lg nx-px-3 nx-py-2 nx-transition-colors nx-text-base nx-leading-tight md:nx-text-sm nx-bg-black/[.05] dark:nx-bg-gray-50/10 focus:nx-bg-white dark:focus:nx-bg-dark placeholder:nx-text-gray-500 dark:placeholder:nx-text-gray-400 contrast-more:nx-border contrast-more:nx-border-current"
+                  type="search" placeholder="搜索文档..." value="" />
+              </div>
+            </div>
+          </div>
+          <div
+            class="nx-overflow-y-auto nx-overflow-x-hidden nx-p-4 nx-grow md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))] nextra-scrollbar">
+            <div
+              class="nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none">
+              <div
+                class="nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none nx-opacity-100">
+                <ul class="nx-flex nx-flex-col nx-gap-1 max-md:nx-hidden">
+                  <li class="nx-flex nx-flex-col nx-gap-1"><a
+                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                      href="/">用于数据请求的 React Hooks 库</a></li>
+                  <li class="open"><a
+                      class="nx-items-center nx-justify-between nx-gap-2 nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                      href="/blog.html">Blog<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        class="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+                          class="nx-origin-center nx-transition-transform rtl:-nx-rotate-180 ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]">
+                        </path>
+                      </svg></a>
+                    <div
+                      class="nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none">
+                      <div
+                        class="nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none nx-opacity-100 ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1">
+                        <ul
+                          class="nx-flex nx-flex-col nx-gap-1 nx-relative before:nx-absolute before:nx-inset-y-1 before:nx-w-px before:nx-bg-gray-200 before:nx-content-[&quot;&quot;] dark:before:nx-bg-neutral-800 ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0 ltr:nx-ml-3 rtl:nx-mr-3">
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/blog/swr-v1.html">SWR V1</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/blog/swr-v2.html">SWR V2</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="open"><button
+                      class="nx-items-center nx-justify-between nx-gap-2 nx-text-left nx-w-full nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">docs<svg
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        class="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+                          class="nx-origin-center nx-transition-transform rtl:-nx-rotate-180 ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]">
+                        </path>
+                      </svg></button>
+                    <div
+                      class="nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none">
+                      <div
+                        class="nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none nx-opacity-100 ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1">
+                        <ul
+                          class="nx-flex nx-flex-col nx-gap-1 nx-relative before:nx-absolute before:nx-inset-y-1 before:nx-w-px before:nx-bg-gray-200 before:nx-content-[&quot;&quot;] dark:before:nx-bg-neutral-800 ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0 ltr:nx-ml-3 rtl:nx-mr-3">
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/api.html">API</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/arguments.html">Arguments</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/conditional-fetching.html">Conditional Fetching</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/data-fetching.html">Data Fetching</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/error-handling.html">Error Handling</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/getting-started.html">Getting Started</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/global-configuration.html">Global Configuration</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/middleware.html">Middleware</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/mutation.html">Mutation</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/pagination.html">Pagination</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/prefetching.html">Prefetching</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/revalidation.html">Revalidation</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/subscription.html">Subscription</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/suspense.html">Suspense</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/typescript.html">TypeScript</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/docs/with-nextjs.html">With Nextjs</a></li>
+                          <li class="open"><button
+                              class="nx-items-center nx-justify-between nx-gap-2 nx-text-left nx-w-full nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">advanced<svg
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                class="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+                                  class="nx-origin-center nx-transition-transform rtl:-nx-rotate-180 ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]">
+                                </path>
+                              </svg></button>
+                            <div
+                              class="nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none">
+                              <div
+                                class="nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none nx-opacity-100 ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1">
+                                <ul
+                                  class="nx-flex nx-flex-col nx-gap-1 nx-relative before:nx-absolute before:nx-inset-y-1 before:nx-w-px before:nx-bg-gray-200 before:nx-content-[&quot;&quot;] dark:before:nx-bg-neutral-800 ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0 ltr:nx-ml-3 rtl:nx-mr-3">
+                                  <li class="nx-flex nx-flex-col nx-gap-1 active"><a
+                                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-bg-primary-100 nx-font-semibold nx-text-primary-800 dark:nx-bg-primary-400/10 dark:nx-text-primary-600 contrast-more:nx-border-primary-500 contrast-more:dark:nx-border-primary-500"
+                                      href="/docs/advanced/cache.html">Cache</a></li>
+                                  <li class="nx-flex nx-flex-col nx-gap-1"><a
+                                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                                      href="/docs/advanced/devtools.html">Devtools</a></li>
+                                  <li class="nx-flex nx-flex-col nx-gap-1"><a
+                                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                                      href="/docs/advanced/performance.html">Performance</a></li>
+                                  <li class="nx-flex nx-flex-col nx-gap-1"><a
+                                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                                      href="/docs/advanced/react-native.html">React Native</a></li>
+                                  <li class="nx-flex nx-flex-col nx-gap-1"><a
+                                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                                      href="/docs/advanced/understanding.html">Understanding</a></li>
+                                </ul>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="open"><button
+                      class="nx-items-center nx-justify-between nx-gap-2 nx-text-left nx-w-full nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">examples<svg
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        class="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+                          class="nx-origin-center nx-transition-transform rtl:-nx-rotate-180 ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]">
+                        </path>
+                      </svg></button>
+                    <div
+                      class="nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none">
+                      <div
+                        class="nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none nx-opacity-100 ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1">
+                        <ul
+                          class="nx-flex nx-flex-col nx-gap-1 nx-relative before:nx-absolute before:nx-inset-y-1 before:nx-w-px before:nx-bg-gray-200 before:nx-content-[&quot;&quot;] dark:before:nx-bg-neutral-800 ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0 ltr:nx-ml-3 rtl:nx-mr-3">
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/examples/error-handling.html">错误处理</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/examples/basic.html">基本用法</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/examples/auth.html">身份验证</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/examples/infinite-loading.html">无限加载</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/examples/ssr.html">Next.js SSR</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/examples/optimistic-ui.html">Optimistic UI</a></li>
+                          <li class="nx-flex nx-flex-col nx-gap-1"><a
+                              class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                              href="/examples/subscription.html">Subscription</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <ul class="nx-flex nx-flex-col nx-gap-1 md:nx-hidden">
+              <li class="nx-flex nx-flex-col nx-gap-1"><a
+                  class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                  href="/">用于数据请求的 React Hooks 库</a></li>
+              <li class="open"><a
+                  class="nx-items-center nx-justify-between nx-gap-2 nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                  href="/blog.html">Blog<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    class="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+                      class="nx-origin-center nx-transition-transform rtl:-nx-rotate-180 ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]">
+                    </path>
+                  </svg></a>
+                <div
+                  class="nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none">
+                  <div
+                    class="nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none nx-opacity-100 ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1">
+                    <ul
+                      class="nx-flex nx-flex-col nx-gap-1 nx-relative before:nx-absolute before:nx-inset-y-1 before:nx-w-px before:nx-bg-gray-200 before:nx-content-[&quot;&quot;] dark:before:nx-bg-neutral-800 ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0 ltr:nx-ml-3 rtl:nx-mr-3">
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/blog/swr-v1.html">SWR V1</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/blog/swr-v2.html">SWR V2</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              <li class="open"><button
+                  class="nx-items-center nx-justify-between nx-gap-2 nx-text-left nx-w-full nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">docs<svg
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    class="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+                      class="nx-origin-center nx-transition-transform rtl:-nx-rotate-180 ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]">
+                    </path>
+                  </svg></button>
+                <div
+                  class="nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none">
+                  <div
+                    class="nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none nx-opacity-100 ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1">
+                    <ul
+                      class="nx-flex nx-flex-col nx-gap-1 nx-relative before:nx-absolute before:nx-inset-y-1 before:nx-w-px before:nx-bg-gray-200 before:nx-content-[&quot;&quot;] dark:before:nx-bg-neutral-800 ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0 ltr:nx-ml-3 rtl:nx-mr-3">
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/api.html">API</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/arguments.html">Arguments</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/conditional-fetching.html">Conditional Fetching</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/data-fetching.html">Data Fetching</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/error-handling.html">Error Handling</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/getting-started.html">Getting Started</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/global-configuration.html">Global Configuration</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/middleware.html">Middleware</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/mutation.html">Mutation</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/pagination.html">Pagination</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/prefetching.html">Prefetching</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/revalidation.html">Revalidation</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/subscription.html">Subscription</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/suspense.html">Suspense</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/typescript.html">TypeScript</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/docs/with-nextjs.html">With Nextjs</a></li>
+                      <li class="open"><button
+                          class="nx-items-center nx-justify-between nx-gap-2 nx-text-left nx-w-full nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">advanced<svg
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            class="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+                              class="nx-origin-center nx-transition-transform rtl:-nx-rotate-180 ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]">
+                            </path>
+                          </svg></button>
+                        <div
+                          class="nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none">
+                          <div
+                            class="nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none nx-opacity-100 ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1">
+                            <ul
+                              class="nx-flex nx-flex-col nx-gap-1 nx-relative before:nx-absolute before:nx-inset-y-1 before:nx-w-px before:nx-bg-gray-200 before:nx-content-[&quot;&quot;] dark:before:nx-bg-neutral-800 ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0 ltr:nx-ml-3 rtl:nx-mr-3">
+                              <li class="nx-flex nx-flex-col nx-gap-1 active"><a
+                                  class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-bg-primary-100 nx-font-semibold nx-text-primary-800 dark:nx-bg-primary-400/10 dark:nx-text-primary-600 contrast-more:nx-border-primary-500 contrast-more:dark:nx-border-primary-500"
+                                  href="/docs/advanced/cache.html">Cache</a>
+                                <ul
+                                  class="nx-flex nx-flex-col nx-gap-1 nx-relative before:nx-absolute before:nx-inset-y-1 before:nx-w-px before:nx-bg-gray-200 before:nx-content-[&quot;&quot;] dark:before:nx-bg-neutral-800 ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0 ltr:nx-ml-3 rtl:nx-mr-3">
+                                  <li><a href="#cache-provider"
+                                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-flex nx-gap-2 before:nx-opacity-25 before:nx-content-[&quot;#&quot;] nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">缓存
+                                      Provider</a></li>
+                                  <li><a href="#create-cache-provider"
+                                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-flex nx-gap-2 before:nx-opacity-25 before:nx-content-[&quot;#&quot;] nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">创建缓存
+                                      Provider</a></li>
+                                  <li><a href="#access-current-cache-provider"
+                                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-flex nx-gap-2 before:nx-opacity-25 before:nx-content-[&quot;#&quot;] nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">访问当前缓存
+                                      Provider</a></li>
+                                  <li><a href="#experimental-extend-cache-provider"
+                                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-flex nx-gap-2 before:nx-opacity-25 before:nx-content-[&quot;#&quot;] nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">实验性：扩展缓存
+                                      provider</a></li>
+                                  <li><a href="#examples"
+                                      class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-flex nx-gap-2 before:nx-opacity-25 before:nx-content-[&quot;#&quot;] nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">示例</a>
+                                  </li>
+                                </ul>
+                              </li>
+                              <li class="nx-flex nx-flex-col nx-gap-1"><a
+                                  class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                                  href="/docs/advanced/devtools.html">Devtools</a></li>
+                              <li class="nx-flex nx-flex-col nx-gap-1"><a
+                                  class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                                  href="/docs/advanced/performance.html">Performance</a></li>
+                              <li class="nx-flex nx-flex-col nx-gap-1"><a
+                                  class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                                  href="/docs/advanced/react-native.html">React Native</a></li>
+                              <li class="nx-flex nx-flex-col nx-gap-1"><a
+                                  class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                                  href="/docs/advanced/understanding.html">Understanding</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              <li class="open"><button
+                  class="nx-items-center nx-justify-between nx-gap-2 nx-text-left nx-w-full nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50">examples<svg
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    class="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+                      class="nx-origin-center nx-transition-transform rtl:-nx-rotate-180 ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]">
+                    </path>
+                  </svg></button>
+                <div
+                  class="nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none">
+                  <div
+                    class="nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none nx-opacity-100 ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1">
+                    <ul
+                      class="nx-flex nx-flex-col nx-gap-1 nx-relative before:nx-absolute before:nx-inset-y-1 before:nx-w-px before:nx-bg-gray-200 before:nx-content-[&quot;&quot;] dark:before:nx-bg-neutral-800 ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0 ltr:nx-ml-3 rtl:nx-mr-3">
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/examples/error-handling.html">错误处理</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/examples/basic.html">基本用法</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/examples/auth.html">身份验证</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/examples/infinite-loading.html">无限加载</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/examples/ssr.html">Next.js SSR</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/examples/optimistic-ui.html">Optimistic UI</a></li>
+                      <li class="nx-flex nx-flex-col nx-gap-1"><a
+                          class="nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word] nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50 contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+                          href="/examples/subscription.html">Subscription</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="nx-sticky nx-bottom-0 nx-bg-white dark:nx-bg-dark nx-mx-4 nx-py-4 nx-shadow-[0_-12px_16px_#fff] nx-flex nx-items-center nx-gap-2 dark:nx-border-neutral-800 dark:nx-shadow-[0_-12px_16px_#111] contrast-more:nx-border-neutral-400 contrast-more:nx-shadow-none contrast-more:dark:nx-shadow-none nx-justify-end nx-border-t"
+            data-toggle-animation="off"><button title="Change language"
+              class="nx-h-7 nx-rounded-md nx-px-2 nx-text-left nx-text-xs nx-font-medium nx-text-gray-600 nx-transition-colors dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 nx-grow"
+              id="headlessui-listbox-button-:R2fjcm:" type="button" aria-haspopup="listbox" aria-expanded="false"
+              data-headlessui-state=""><span class="nx-flex nx-items-center nx-gap-2"><svg viewBox="2 2 16 16"
+                  width="12" height="12" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z"
+                    clip-rule="evenodd"></path>
+                </svg><span class=""></span></span></button>
+            <div class=""><button title="Change theme"
+                class="nx-h-7 nx-rounded-md nx-px-2 nx-text-left nx-text-xs nx-font-medium nx-text-gray-600 nx-transition-colors dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50"
+                id="headlessui-listbox-button-:R2njcm:" type="button" aria-haspopup="listbox" aria-expanded="false"
+                data-headlessui-state="">
+                <div class="nx-flex nx-items-center nx-gap-2 nx-capitalize"><svg fill="none" viewBox="3 3 18 18"
+                    width="12" height="12" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" fill="currentColor"
+                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                    </path>
+                  </svg><span class="md:nx-hidden">Light</span></div>
+              </button></div>
+          </div>
+        </aside>
+        <nav class="nextra-toc nx-order-last nx-hidden nx-w-64 nx-shrink-0 xl:nx-block print:nx-hidden nx-px-4"
+          aria-label="table of contents">
+          <div
+            class="nextra-scrollbar nx-sticky nx-top-16 nx-overflow-y-auto nx-pr-4 nx-pt-6 nx-text-sm [hyphens:auto] nx-max-h-[calc(100vh-var(--nextra-navbar-height)-env(safe-area-inset-bottom))] ltr:-nx-mr-4 rtl:-nx-ml-4">
+            <p class="nx-mb-4 nx-font-semibold nx-tracking-tight">本页内容</p>
+            <ul>
+              <li class="nx-my-2 nx-scroll-my-6 nx-scroll-py-6"><a href="#cache-provider"
+                  class="nx-font-semibold nx-inline-block nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-300 contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50 nx-w-full nx-break-words">缓存
+                  Provider</a></li>
+              <li class="nx-my-2 nx-scroll-my-6 nx-scroll-py-6"><a href="#create-cache-provider"
+                  class="nx-font-semibold nx-inline-block nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-300 contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50 nx-w-full nx-break-words">创建缓存
+                  Provider</a></li>
+              <li class="nx-my-2 nx-scroll-my-6 nx-scroll-py-6"><a href="#access-current-cache-provider"
+                  class="nx-font-semibold nx-inline-block nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-300 contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50 nx-w-full nx-break-words">访问当前缓存
+                  Provider</a></li>
+              <li class="nx-my-2 nx-scroll-my-6 nx-scroll-py-6"><a href="#experimental-extend-cache-provider"
+                  class="nx-font-semibold nx-inline-block nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-300 contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50 nx-w-full nx-break-words">实验性：扩展缓存
+                  provider</a></li>
+              <li class="nx-my-2 nx-scroll-my-6 nx-scroll-py-6"><a href="#examples"
+                  class="nx-font-semibold nx-inline-block nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-300 contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50 nx-w-full nx-break-words">示例</a>
+              </li>
+              <li class="nx-my-2 nx-scroll-my-6 nx-scroll-py-6"><a href="#localstorage-based-persistent-cache"
+                  class="ltr:nx-pl-4 rtl:nx-pr-4 nx-inline-block nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-300 contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50 nx-w-full nx-break-words">基于
+                  LocalStorage 的持久缓存</a></li>
+              <li class="nx-my-2 nx-scroll-my-6 nx-scroll-py-6"><a href="#reset-cache-between-test-cases"
+                  class="ltr:nx-pl-4 rtl:nx-pr-4 nx-inline-block nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-300 contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50 nx-w-full nx-break-words">重置测试用例之间的缓存</a>
+              </li>
+              <li class="nx-my-2 nx-scroll-my-6 nx-scroll-py-6"><a href="#modify-the-cache-data"
+                  class="ltr:nx-pl-4 rtl:nx-pr-4 nx-inline-block nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-300 contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50 nx-w-full nx-break-words">Modify
+                  the Cache Data</a></li>
+            </ul>
+            <div
+              class="nx-mt-8 nx-border-t nx-bg-white nx-pt-8 nx-shadow-[0_-12px_16px_white] dark:nx-bg-dark dark:nx-shadow-[0_-12px_16px_#111] nx-sticky nx-bottom-0 nx-flex nx-flex-col nx-items-start nx-gap-2 nx-pb-8 dark:nx-border-neutral-800 contrast-more:nx-border-t contrast-more:nx-border-neutral-400 contrast-more:nx-shadow-none contrast-more:dark:nx-border-neutral-400">
+              <a href="https://github.com/vercel/swr-site/issues/new?title=Feedback%20for%20%E2%80%9C%E7%BC%93%E5%AD%98%E2%80%9D&amp;labels=feedback"
+                target="_blank" rel="noreferrer"
+                class="nx-text-xs nx-font-medium nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-100 contrast-more:nx-text-gray-800 contrast-more:dark:nx-text-gray-50">有疑问？给我们反馈
+                →<span class="nx-sr-only"> (opens in a new tab)</span></a><a
+                class="nx-text-xs nx-font-medium nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-100 contrast-more:nx-text-gray-800 contrast-more:dark:nx-text-gray-50"
+                href="https://github.com/vercel/swr-site/blob/main/pages/docs/advanced/cache.mdx.html">在 GitHub 上编辑本页
+                →</a>
+            </div>
+          </div>
+        </nav>
+        <div id="reach-skip-nav"></div>
+        <article
+          class="nx-w-full nx-break-words nextra-content nx-flex nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-min-w-0 nx-justify-center nx-pb-8 nx-pr-[calc(env(safe-area-inset-right)-1.5rem)]">
+          <main class="nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pt-4 md:nx-px-12">
+            <div
+              class="nextra-breadcrumb nx-mt-1.5 nx-flex nx-items-center nx-gap-1 nx-overflow-hidden nx-text-sm nx-text-gray-500 contrast-more:nx-text-current">
+              <div class="nx-whitespace-nowrap nx-transition-colors nx-min-w-[24px] nx-overflow-hidden nx-text-ellipsis"
+                title="docs">docs</div><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                class="nx-w-3.5 nx-shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <div class="nx-whitespace-nowrap nx-transition-colors nx-min-w-[24px] nx-overflow-hidden nx-text-ellipsis"
+                title="advanced">advanced</div><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                class="nx-w-3.5 nx-shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <div
+                class="nx-whitespace-nowrap nx-transition-colors nx-font-medium nx-text-gray-700 contrast-more:nx-font-bold contrast-more:nx-text-current dark:nx-text-gray-400 contrast-more:dark:nx-text-current"
+                title="Cache">Cache</div>
+            </div>
+            <h1 class="nx-mt-2 nx-text-4xl nx-font-bold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100">缓存
+            </h1>
+            <div
+              class="nextra-callout nx-overflow-x-auto nx-mt-6 nx-flex nx-rounded-lg nx-border nx-py-2 ltr:nx-pr-4 rtl:nx-pl-4 contrast-more:nx-border-current contrast-more:dark:nx-border-current nx-border-orange-100 nx-bg-orange-50 nx-text-orange-800 dark:nx-border-orange-400/30 dark:nx-bg-orange-400/20 dark:nx-text-orange-300">
+              <div class="nx-select-none nx-text-xl ltr:nx-pl-3 ltr:nx-pr-2 rtl:nx-pr-3 rtl:nx-pl-2"
+                style="font-family:&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;">
+                💡</div>
+              <div class="nx-w-full nx-min-w-0 nx-leading-7">
+                <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">升级到最新版本（≥ 1.0.0）来使用该功能。</p>
+              </div>
+            </div>
+            <div
+              class="nextra-callout nx-overflow-x-auto nx-mt-6 nx-flex nx-rounded-lg nx-border nx-py-2 ltr:nx-pr-4 rtl:nx-pl-4 contrast-more:nx-border-current contrast-more:dark:nx-border-current nx-border-orange-100 nx-bg-orange-50 nx-text-orange-800 dark:nx-border-orange-400/30 dark:nx-bg-orange-400/20 dark:nx-text-orange-300">
+              <div class="nx-select-none nx-text-xl ltr:nx-pl-3 ltr:nx-pr-2 rtl:nx-pr-3 rtl:nx-pl-2"
+                style="font-family:&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;">
+                ⚠️</div>
+              <div class="nx-w-full nx-min-w-0 nx-leading-7">
+                <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">在大多数情况下，你不应该直接<em>写入</em>缓存，这可能会导致 SWR 不可预知的行为。如果你需要手动操作一个
+                  key，请考虑使用 SWR API。<br />
+                  参见：<a
+                    class="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+                    href="/docs/mutation.html">数据更改</a>，<a
+                    class="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+                    href="/docs/advanced/cache#reset-cache-between-test-cases.html">重置测试用例之间的缓存</a>。</p>
+              </div>
+            </div>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">默认情况下，SWR 使用全局缓存在所有组件之间存储和共享数据。但你也可以通过 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">SWRConfig</code> 的 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">provider</code> 选项来自定义这个行为。</p>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">缓存 provider 旨在通过更多自定义存储启用 SWR。</p>
+            <h2
+              class="nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100 nx-mt-10 nx-border-b nx-pb-1 nx-text-3xl nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400">
+              缓存 Provider<span class="nx-absolute -nx-mt-20" id="cache-provider"></span><a href="#cache-provider"
+                class="subheading-anchor" aria-label="Permalink for this section"></a></h2>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">缓存 provider 是类似 Map 的对象，它匹配以下 TypeScript 定义（可以从 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">swr</code> 导入）：</p>
+            <div class="nextra-code-block nx-relative nx-mt-6 first:nx-mt-0">
+              <pre
+                class="nx-bg-primary-700/5 nx-mb-4 nx-overflow-x-auto nx-rounded-xl nx-subpixel-antialiased dark:nx-bg-primary-300/10 nx-text-[.9em] contrast-more:nx-border contrast-more:nx-border-primary-900/20 contrast-more:nx-contrast-150 contrast-more:dark:nx-border-primary-100/40 nx-py-4"
+                data-language="typescript" data-theme="default"><code class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10" dir="ltr" data-language="typescript" data-theme="default"><span class="line"><span style="color:var(--shiki-token-keyword)">interface</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">Cache</span><span style="color:var(--shiki-color-text)">&lt;</span><span style="color:var(--shiki-token-function)">Data</span><span style="color:var(--shiki-color-text)">&gt; {</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-function)">get</span><span style="color:var(--shiki-color-text)">(key</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">string</span><span style="color:var(--shiki-color-text)">)</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">Data</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">undefined</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-function)">set</span><span style="color:var(--shiki-color-text)">(key</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">string</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-color-text)"> value</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">Data</span><span style="color:var(--shiki-color-text)">)</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">void</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-function)">delete</span><span style="color:var(--shiki-color-text)">(key</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">string</span><span style="color:var(--shiki-color-text)">)</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">void</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-function)">keys</span><span style="color:var(--shiki-color-text)">()</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">IterableIterator</span><span style="color:var(--shiki-color-text)">&lt;</span><span style="color:var(--shiki-token-constant)">string</span><span style="color:var(--shiki-color-text)">&gt;</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">}</span></span></code></pre>
+              <div
+                class="nx-opacity-0 nx-transition [div:hover&gt;&amp;]:nx-opacity-100 focus-within:nx-opacity-100 nx-flex nx-gap-1 nx-absolute nx-m-[11px] nx-right-0 nx-top-0">
+                <button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50 md:nx-hidden"
+                  title="Toggle word wrap"><svg viewBox="0 0 24 24" width="24" height="24"
+                    class="nx-pointer-events-none nx-h-4 nx-w-4">
+                    <path fill="currentColor"
+                      d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3l3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z">
+                    </path>
+                  </svg></button><button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50"
+                  title="Copy code" tabindex="0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                    class="nextra-copy-icon nx-pointer-events-none nx-h-4 nx-w-4">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"></rect>
+                    <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg></button>
+              </div>
+            </div>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">例如，一个 <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map.html"
+                target="_blank" rel="noreferrer"
+                class="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]">JavaScript
+                Map<span class="nx-sr-only"> (opens in a new tab)</span></a> 实例可以直接用作 SWR 的缓存 provider。</p>
+            <h2
+              class="nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100 nx-mt-10 nx-border-b nx-pb-1 nx-text-3xl nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400">
+              创建缓存 Provider<span class="nx-absolute -nx-mt-20" id="create-cache-provider"></span><a
+                href="#create-cache-provider" class="subheading-anchor" aria-label="Permalink for this section"></a>
+            </h2>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0"><code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">SWRConfig</code> 的 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">provider</code> 选项接收一个返回<a
+                class="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+                href="/docs/advanced/cache#cache-provider.html">缓存 provider</a> 的函数。该 provider 将被 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">SWRConfig</code> 范围内的所有 SWR hook 使用。例如：</p>
+            <div class="nextra-code-block nx-relative nx-mt-6 first:nx-mt-0">
+              <pre
+                class="nx-bg-primary-700/5 nx-mb-4 nx-overflow-x-auto nx-rounded-xl nx-subpixel-antialiased dark:nx-bg-primary-300/10 nx-text-[.9em] contrast-more:nx-border contrast-more:nx-border-primary-900/20 contrast-more:nx-contrast-150 contrast-more:dark:nx-border-primary-100/40 nx-py-4"
+                data-language="jsx" data-theme="default"><code class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10" dir="ltr" data-language="jsx" data-theme="default"><span class="line"><span style="color:var(--shiki-token-keyword)">import</span><span style="color:var(--shiki-color-text)"> useSWR</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-color-text)"> { SWRConfig } </span><span style="color:var(--shiki-token-keyword)">from</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-string-expression)">&#x27;swr&#x27;</span></span>
+<span class="line"> </span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">function</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">App</span><span style="color:var(--shiki-color-text)">() {</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-color-text)"> (</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">    &lt;</span><span style="color:var(--shiki-token-constant)">SWRConfig</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">value</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-color-text)">{{ </span><span style="color:var(--shiki-token-function)">provider</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> () </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-keyword)">new</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">Map</span><span style="color:var(--shiki-color-text)">() }}&gt;</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">      &lt;</span><span style="color:var(--shiki-token-constant)">Page</span><span style="color:var(--shiki-color-text)">/&gt;</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">    &lt;/</span><span style="color:var(--shiki-token-constant)">SWRConfig</span><span style="color:var(--shiki-color-text)">&gt;</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  )</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">}</span></span></code></pre>
+              <div
+                class="nx-opacity-0 nx-transition [div:hover&gt;&amp;]:nx-opacity-100 focus-within:nx-opacity-100 nx-flex nx-gap-1 nx-absolute nx-m-[11px] nx-right-0 nx-top-0">
+                <button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50 md:nx-hidden"
+                  title="Toggle word wrap"><svg viewBox="0 0 24 24" width="24" height="24"
+                    class="nx-pointer-events-none nx-h-4 nx-w-4">
+                    <path fill="currentColor"
+                      d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3l3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z">
+                    </path>
+                  </svg></button><button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50"
+                  title="Copy code" tabindex="0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                    class="nextra-copy-icon nx-pointer-events-none nx-h-4 nx-w-4">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"></rect>
+                    <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg></button>
+              </div>
+            </div>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0"><code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">&lt;Page/&gt;</code> 中的所有 SWR hook 都将从该 Map 实例读取和写入。你还可以针对你的特定用例使用其他缓存 provider 实现。</p>
+            <div
+              class="nextra-callout nx-overflow-x-auto nx-mt-6 nx-flex nx-rounded-lg nx-border nx-py-2 ltr:nx-pr-4 rtl:nx-pl-4 contrast-more:nx-border-current contrast-more:dark:nx-border-current nx-border-orange-100 nx-bg-orange-50 nx-text-orange-800 dark:nx-border-orange-400/30 dark:nx-bg-orange-400/20 dark:nx-text-orange-300">
+              <div class="nx-select-none nx-text-xl ltr:nx-pl-3 ltr:nx-pr-2 rtl:nx-pr-3 rtl:nx-pl-2"
+                style="font-family:&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;">
+                💡</div>
+              <div class="nx-w-full nx-min-w-0 nx-leading-7">
+                <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">在上面的例子中，当 <code
+                    class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                    dir="ltr">&lt;App/&gt;</code> 组件重新挂载时，provider 也会被重新创建。缓存 provider 应该放在组件树的更高位置，或者放在渲染之外。</p>
+              </div>
+            </div>
+            <!-- -->
+            <div class="my-8">
+              <div><svg viewBox="0 0 588 311" fill="none" class="invert-on-dark">
+                  <path stroke="#D2D2D2" d="M22.5 59.5h543v232h-543z"></path>
+                  <path fill="#fff" d="M40 43h116v33H40z"></path>
+                  <path fill="#141414"></path>
+                  <path stroke="#D2D2D2" d="M54.5 91.5h256v168h-256z"></path>
+                  <circle cx="183" cy="174" r="44.5" fill="#EAEAEA" stroke="#D3D3D3"></circle>
+                  <path fill="#000"></path>
+                  <circle cx="434" cy="174" r="44.5" fill="#EAEAEA" stroke="#D3D3D3"></circle>
+                  <path fill="#000"></path>
+                  <path fill="#fff" d="M72 75h116v33H72z"></path>
+                  <path fill="#141414"></path>
+                  <path fill="#9A9A9A"></path>
+                </svg></div>
+            </div>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">当嵌套时，SWR hook 将使用上层缓存 provider。如果没有上层缓存 provider，则回退到默认
+              provider，即一个空 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">Map</code>。</p>
+            <div
+              class="nextra-callout nx-overflow-x-auto nx-mt-6 nx-flex nx-rounded-lg nx-border nx-py-2 ltr:nx-pr-4 rtl:nx-pl-4 contrast-more:nx-border-current contrast-more:dark:nx-border-current nx-border-orange-100 nx-bg-orange-50 nx-text-orange-800 dark:nx-border-orange-400/30 dark:nx-bg-orange-400/20 dark:nx-text-orange-300">
+              <div class="nx-select-none nx-text-xl ltr:nx-pl-3 ltr:nx-pr-2 rtl:nx-pr-3 rtl:nx-pl-2"
+                style="font-family:&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;">
+                ⚠️</div>
+              <div class="nx-w-full nx-min-w-0 nx-leading-7">
+                <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">如果使用了缓存 provider，则全局 <code
+                    class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                    dir="ltr">mutate</code> 将<strong>不</strong>适用于 <code
+                    class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                    dir="ltr">&lt;SWRConfig&gt;</code> 范围内的 SWR hook。请使用<a
+                    class="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+                    href="/docs/advanced/cache#access-current-cache-provider.html">访问当前缓存 Provider</a> 代替。</p>
+              </div>
+            </div>
+            <h2
+              class="nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100 nx-mt-10 nx-border-b nx-pb-1 nx-text-3xl nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400">
+              访问当前缓存 Provider<span class="nx-absolute -nx-mt-20" id="access-current-cache-provider"></span><a
+                href="#access-current-cache-provider" class="subheading-anchor"
+                aria-label="Permalink for this section"></a></h2>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">在 React 组件内部，你需要使用 <a
+                class="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+                href="/docs/global-configuration#access-to-global-configurations.html"><code
+                  class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                  dir="ltr">useSWRConfig</code></a> hook 来访问当前缓存 provider 以及其他配置，包括 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">mutate</code>：</p>
+            <div class="nextra-code-block nx-relative nx-mt-6 first:nx-mt-0">
+              <pre
+                class="nx-bg-primary-700/5 nx-mb-4 nx-overflow-x-auto nx-rounded-xl nx-subpixel-antialiased dark:nx-bg-primary-300/10 nx-text-[.9em] contrast-more:nx-border contrast-more:nx-border-primary-900/20 contrast-more:nx-contrast-150 contrast-more:dark:nx-border-primary-100/40 nx-py-4"
+                data-language="jsx" data-theme="default"><code class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10" dir="ltr" data-language="jsx" data-theme="default"><span class="line"><span style="color:var(--shiki-token-keyword)">import</span><span style="color:var(--shiki-color-text)"> { useSWRConfig } </span><span style="color:var(--shiki-token-keyword)">from</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-string-expression)">&#x27;swr&#x27;</span></span>
+<span class="line"> </span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">function</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">Avatar</span><span style="color:var(--shiki-color-text)">() {</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-keyword)">const</span><span style="color:var(--shiki-color-text)"> { </span><span style="color:var(--shiki-token-constant)">cache</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">mutate</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-keyword)">...</span><span style="color:var(--shiki-token-constant)">extraConfig</span><span style="color:var(--shiki-color-text)"> } </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">useSWRConfig</span><span style="color:var(--shiki-color-text)">()</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-comment)">// ...</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">}</span></span></code></pre>
+              <div
+                class="nx-opacity-0 nx-transition [div:hover&gt;&amp;]:nx-opacity-100 focus-within:nx-opacity-100 nx-flex nx-gap-1 nx-absolute nx-m-[11px] nx-right-0 nx-top-0">
+                <button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50 md:nx-hidden"
+                  title="Toggle word wrap"><svg viewBox="0 0 24 24" width="24" height="24"
+                    class="nx-pointer-events-none nx-h-4 nx-w-4">
+                    <path fill="currentColor"
+                      d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3l3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z">
+                    </path>
+                  </svg></button><button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50"
+                  title="Copy code" tabindex="0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                    class="nextra-copy-icon nx-pointer-events-none nx-h-4 nx-w-4">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"></rect>
+                    <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg></button>
+              </div>
+            </div>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">如果不在任何 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">&lt;SWRConfig&gt;</code> 中，将返回默认配置。</p>
+            <h2
+              class="nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100 nx-mt-10 nx-border-b nx-pb-1 nx-text-3xl nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400">
+              实验性：扩展缓存 provider<span class="nx-absolute -nx-mt-20" id="experimental-extend-cache-provider"></span><a
+                href="#experimental-extend-cache-provider" class="subheading-anchor"
+                aria-label="Permalink for this section"></a></h2>
+            <div
+              class="nextra-callout nx-overflow-x-auto nx-mt-6 nx-flex nx-rounded-lg nx-border nx-py-2 ltr:nx-pr-4 rtl:nx-pl-4 contrast-more:nx-border-current contrast-more:dark:nx-border-current nx-border-orange-100 nx-bg-orange-50 nx-text-orange-800 dark:nx-border-orange-400/30 dark:nx-bg-orange-400/20 dark:nx-text-orange-300">
+              <div class="nx-select-none nx-text-xl ltr:nx-pl-3 ltr:nx-pr-2 rtl:nx-pr-3 rtl:nx-pl-2"
+                style="font-family:&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;">
+                🧪</div>
+              <div class="nx-w-full nx-min-w-0 nx-leading-7">
+                <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">这是一个实验性的功能，在未来的升级中可能会发生变化。</p>
+              </div>
+            </div>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">当多个 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">&lt;SWRConfig&gt;</code> 组件嵌套时，可以扩展缓存 provider。</p>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0"><code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">provider</code> 函数的第一个参数是上层 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">&lt;SWRConfig&gt;</code> 的缓存 provider（如果没有父级 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">&lt;SWRConfig&gt;</code>，则为默认缓存），你可以使用它来扩展缓存 provider：</p>
+            <div class="nextra-code-block nx-relative nx-mt-6 first:nx-mt-0">
+              <pre
+                class="nx-bg-primary-700/5 nx-mb-4 nx-overflow-x-auto nx-rounded-xl nx-subpixel-antialiased dark:nx-bg-primary-300/10 nx-text-[.9em] contrast-more:nx-border contrast-more:nx-border-primary-900/20 contrast-more:nx-contrast-150 contrast-more:dark:nx-border-primary-100/40 nx-py-4"
+                data-language="jsx"
+                data-theme="default"><code class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10" dir="ltr" data-language="jsx" data-theme="default"><span class="line"><span style="color:var(--shiki-color-text)">&lt;</span><span style="color:var(--shiki-token-constant)">SWRConfig</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">value</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-color-text)">{{ </span><span style="color:var(--shiki-token-function)">provider</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> (cache) </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-color-text)"> newCache }}&gt;</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  ...</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">&lt;/</span><span style="color:var(--shiki-token-constant)">SWRConfig</span><span style="color:var(--shiki-color-text)">&gt;</span></span></code></pre>
+              <div
+                class="nx-opacity-0 nx-transition [div:hover&gt;&amp;]:nx-opacity-100 focus-within:nx-opacity-100 nx-flex nx-gap-1 nx-absolute nx-m-[11px] nx-right-0 nx-top-0">
+                <button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50 md:nx-hidden"
+                  title="Toggle word wrap"><svg viewBox="0 0 24 24" width="24" height="24"
+                    class="nx-pointer-events-none nx-h-4 nx-w-4">
+                    <path fill="currentColor"
+                      d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3l3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z">
+                    </path>
+                  </svg></button><button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50"
+                  title="Copy code" tabindex="0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                    class="nextra-copy-icon nx-pointer-events-none nx-h-4 nx-w-4">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"></rect>
+                    <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg></button>
+              </div>
+            </div>
+            <h2
+              class="nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100 nx-mt-10 nx-border-b nx-pb-1 nx-text-3xl nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400">
+              示例<span class="nx-absolute -nx-mt-20" id="examples"></span><a href="#examples" class="subheading-anchor"
+                aria-label="Permalink for this section"></a></h2>
+            <h3 class="nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100 nx-mt-8 nx-text-2xl">
+              基于 LocalStorage 的持久缓存<span class="nx-absolute -nx-mt-20"
+                id="localstorage-based-persistent-cache"></span><a href="#localstorage-based-persistent-cache"
+                class="subheading-anchor" aria-label="Permalink for this section"></a></h3>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">你可能希望将缓存同步到 <code
+                class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                dir="ltr">localStorage</code>。下面是一个示例实现：</p>
+            <div class="nextra-code-block nx-relative nx-mt-6 first:nx-mt-0">
+              <pre
+                class="nx-bg-primary-700/5 nx-mb-4 nx-overflow-x-auto nx-rounded-xl nx-subpixel-antialiased dark:nx-bg-primary-300/10 nx-text-[.9em] contrast-more:nx-border contrast-more:nx-border-primary-900/20 contrast-more:nx-contrast-150 contrast-more:dark:nx-border-primary-100/40 nx-py-4"
+                data-language="jsx" data-theme="default"><code class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10" dir="ltr" data-language="jsx" data-theme="default"><span class="line"><span style="color:var(--shiki-token-keyword)">function</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">localStorageProvider</span><span style="color:var(--shiki-color-text)">() {</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-comment)">// 初始化时，我们将数据从 `localStorage` 恢复到一个 map 中。</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-keyword)">const</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">map</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-keyword)">new</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">Map</span><span style="color:var(--shiki-color-text)">(</span><span style="color:var(--shiki-token-constant)">JSON</span><span style="color:var(--shiki-token-function)">.parse</span><span style="color:var(--shiki-color-text)">(</span><span style="color:var(--shiki-token-constant)">localStorage</span><span style="color:var(--shiki-token-function)">.getItem</span><span style="color:var(--shiki-color-text)">(</span><span style="color:var(--shiki-token-string-expression)">&#x27;app-cache&#x27;</span><span style="color:var(--shiki-color-text)">) </span><span style="color:var(--shiki-token-keyword)">||</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-string-expression)">&#x27;[]&#x27;</span><span style="color:var(--shiki-color-text)">))</span></span>
+<span class="line"> </span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-comment)">// 在卸载 app 之前，我们将所有数据写回 `localStorage` 中。</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-constant)">window</span><span style="color:var(--shiki-token-function)">.addEventListener</span><span style="color:var(--shiki-color-text)">(</span><span style="color:var(--shiki-token-string-expression)">&#x27;beforeunload&#x27;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-color-text)"> () </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-color-text)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">    </span><span style="color:var(--shiki-token-keyword)">const</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">appCache</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">JSON</span><span style="color:var(--shiki-token-function)">.stringify</span><span style="color:var(--shiki-color-text)">(</span><span style="color:var(--shiki-token-constant)">Array</span><span style="color:var(--shiki-token-function)">.from</span><span style="color:var(--shiki-color-text)">(</span><span style="color:var(--shiki-token-constant)">map</span><span style="color:var(--shiki-token-function)">.entries</span><span style="color:var(--shiki-color-text)">()))</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">    </span><span style="color:var(--shiki-token-constant)">localStorage</span><span style="color:var(--shiki-token-function)">.setItem</span><span style="color:var(--shiki-color-text)">(</span><span style="color:var(--shiki-token-string-expression)">&#x27;app-cache&#x27;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-color-text)"> appCache)</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  })</span></span>
+<span class="line"> </span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-comment)">// 我们仍然使用 map 进行读写以提高性能。</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-color-text)"> map</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">}</span></span></code></pre>
+              <div
+                class="nx-opacity-0 nx-transition [div:hover&gt;&amp;]:nx-opacity-100 focus-within:nx-opacity-100 nx-flex nx-gap-1 nx-absolute nx-m-[11px] nx-right-0 nx-top-0">
+                <button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50 md:nx-hidden"
+                  title="Toggle word wrap"><svg viewBox="0 0 24 24" width="24" height="24"
+                    class="nx-pointer-events-none nx-h-4 nx-w-4">
+                    <path fill="currentColor"
+                      d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3l3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z">
+                    </path>
+                  </svg></button><button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50"
+                  title="Copy code" tabindex="0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                    class="nextra-copy-icon nx-pointer-events-none nx-h-4 nx-w-4">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"></rect>
+                    <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg></button>
+              </div>
+            </div>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">然后将其作为 provider 使用：</p>
+            <div class="nextra-code-block nx-relative nx-mt-6 first:nx-mt-0">
+              <pre
+                class="nx-bg-primary-700/5 nx-mb-4 nx-overflow-x-auto nx-rounded-xl nx-subpixel-antialiased dark:nx-bg-primary-300/10 nx-text-[.9em] contrast-more:nx-border contrast-more:nx-border-primary-900/20 contrast-more:nx-contrast-150 contrast-more:dark:nx-border-primary-100/40 nx-py-4"
+                data-language="jsx"
+                data-theme="default"><code class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10" dir="ltr" data-language="jsx" data-theme="default"><span class="line"><span style="color:var(--shiki-color-text)">&lt;</span><span style="color:var(--shiki-token-constant)">SWRConfig</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">value</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-color-text)">{{ provider</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> localStorageProvider }}&gt;</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  &lt;</span><span style="color:var(--shiki-token-constant)">App</span><span style="color:var(--shiki-color-text)">/&gt;</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">&lt;/</span><span style="color:var(--shiki-token-constant)">SWRConfig</span><span style="color:var(--shiki-color-text)">&gt;</span></span></code></pre>
+              <div
+                class="nx-opacity-0 nx-transition [div:hover&gt;&amp;]:nx-opacity-100 focus-within:nx-opacity-100 nx-flex nx-gap-1 nx-absolute nx-m-[11px] nx-right-0 nx-top-0">
+                <button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50 md:nx-hidden"
+                  title="Toggle word wrap"><svg viewBox="0 0 24 24" width="24" height="24"
+                    class="nx-pointer-events-none nx-h-4 nx-w-4">
+                    <path fill="currentColor"
+                      d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3l3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z">
+                    </path>
+                  </svg></button><button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50"
+                  title="Copy code" tabindex="0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                    class="nextra-copy-icon nx-pointer-events-none nx-h-4 nx-w-4">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"></rect>
+                    <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg></button>
+              </div>
+            </div>
+            <div
+              class="nextra-callout nx-overflow-x-auto nx-mt-6 nx-flex nx-rounded-lg nx-border nx-py-2 ltr:nx-pr-4 rtl:nx-pl-4 contrast-more:nx-border-current contrast-more:dark:nx-border-current nx-border-orange-100 nx-bg-orange-50 nx-text-orange-800 dark:nx-border-orange-400/30 dark:nx-bg-orange-400/20 dark:nx-text-orange-300">
+              <div class="nx-select-none nx-text-xl ltr:nx-pl-3 ltr:nx-pr-2 rtl:nx-pr-3 rtl:nx-pl-2"
+                style="font-family:&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;">
+                💡</div>
+              <div class="nx-w-full nx-min-w-0 nx-leading-7">
+                <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">作为一种改进，你还可以使用内存缓存作为缓冲区，并定期写入 <code
+                    class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                    dir="ltr">localStorage</code>。你还可以使用 IndexedDB 或 WebSQL 实现类似的分层缓存。</p>
+              </div>
+            </div>
+            <h3 class="nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100 nx-mt-8 nx-text-2xl">
+              重置测试用例之间的缓存<span class="nx-absolute -nx-mt-20" id="reset-cache-between-test-cases"></span><a
+                href="#reset-cache-between-test-cases" class="subheading-anchor"
+                aria-label="Permalink for this section"></a></h3>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">在测试应用程序时，你可能希望重置测试用例之间的 SWR 缓存。你可以简单地使用空缓存 provider
+              包装你的应用程序。下面是一个使用 Jest 的例子：</p>
+            <div class="nextra-code-block nx-relative nx-mt-6 first:nx-mt-0">
+              <pre
+                class="nx-bg-primary-700/5 nx-mb-4 nx-overflow-x-auto nx-rounded-xl nx-subpixel-antialiased dark:nx-bg-primary-300/10 nx-text-[.9em] contrast-more:nx-border contrast-more:nx-border-primary-900/20 contrast-more:nx-contrast-150 contrast-more:dark:nx-border-primary-100/40 nx-py-4"
+                data-language="jsx" data-theme="default"><code class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10" dir="ltr" data-language="jsx" data-theme="default"><span class="line"><span style="color:var(--shiki-token-function)">describe</span><span style="color:var(--shiki-color-text)">(</span><span style="color:var(--shiki-token-string-expression)">&#x27;test suite&#x27;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-keyword)">async</span><span style="color:var(--shiki-color-text)"> () </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-color-text)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-function)">it</span><span style="color:var(--shiki-color-text)">(</span><span style="color:var(--shiki-token-string-expression)">&#x27;test case&#x27;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-keyword)">async</span><span style="color:var(--shiki-color-text)"> () </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-color-text)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">    </span><span style="color:var(--shiki-token-function)">render</span><span style="color:var(--shiki-color-text)">(</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">      &lt;</span><span style="color:var(--shiki-token-constant)">SWRConfig</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">value</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-color-text)">{{ </span><span style="color:var(--shiki-token-function)">provider</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> () </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-keyword)">new</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">Map</span><span style="color:var(--shiki-color-text)">() }}&gt;</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">        &lt;</span><span style="color:var(--shiki-token-constant)">App</span><span style="color:var(--shiki-color-text)">/&gt;</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">      &lt;/</span><span style="color:var(--shiki-token-constant)">SWRConfig</span><span style="color:var(--shiki-color-text)">&gt;</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">    )</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  })</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">})</span></span></code></pre>
+              <div
+                class="nx-opacity-0 nx-transition [div:hover&gt;&amp;]:nx-opacity-100 focus-within:nx-opacity-100 nx-flex nx-gap-1 nx-absolute nx-m-[11px] nx-right-0 nx-top-0">
+                <button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50 md:nx-hidden"
+                  title="Toggle word wrap"><svg viewBox="0 0 24 24" width="24" height="24"
+                    class="nx-pointer-events-none nx-h-4 nx-w-4">
+                    <path fill="currentColor"
+                      d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3l3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z">
+                    </path>
+                  </svg></button><button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50"
+                  title="Copy code" tabindex="0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                    class="nextra-copy-icon nx-pointer-events-none nx-h-4 nx-w-4">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"></rect>
+                    <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg></button>
+              </div>
+            </div>
+            <h3 class="nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100 nx-mt-8 nx-text-2xl">
+              Modify the Cache Data<span class="nx-absolute -nx-mt-20" id="modify-the-cache-data"></span><a
+                href="#modify-the-cache-data" class="subheading-anchor" aria-label="Permalink for this section"></a>
+            </h3>
+            <div
+              class="nextra-callout nx-overflow-x-auto nx-mt-6 nx-flex nx-rounded-lg nx-border nx-py-2 ltr:nx-pr-4 rtl:nx-pl-4 contrast-more:nx-border-current contrast-more:dark:nx-border-current nx-border-red-200 nx-bg-red-100 nx-text-red-900 dark:nx-border-red-200/30 dark:nx-bg-red-900/30 dark:nx-text-red-200">
+              <div class="nx-select-none nx-text-xl ltr:nx-pl-3 ltr:nx-pr-2 rtl:nx-pr-3 rtl:nx-pl-2"
+                style="font-family:&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;">
+                🚨</div>
+              <div class="nx-w-full nx-min-w-0 nx-leading-7">
+                <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">你不应该直接写入缓存，那样可能会导致不可预知的行为。</p>
+              </div>
+            </div>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">You can use <a
+                class="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+                href="/docs/mutation.html"><code
+                  class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10"
+                  dir="ltr">mutate</code></a> to modify the cache. For example, you can clear all cache data like the
+              following.</p>
+            <div class="nextra-code-block nx-relative nx-mt-6 first:nx-mt-0">
+              <pre
+                class="nx-bg-primary-700/5 nx-mb-4 nx-overflow-x-auto nx-rounded-xl nx-subpixel-antialiased dark:nx-bg-primary-300/10 nx-text-[.9em] contrast-more:nx-border contrast-more:nx-border-primary-900/20 contrast-more:nx-contrast-150 contrast-more:dark:nx-border-primary-100/40 nx-py-4"
+                data-language="jsx" data-theme="default"><code class="nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-bg-black nx-break-words nx-rounded-md nx-border nx-py-0.5 nx-px-[.25em] nx-text-[.9em] dark:nx-border-white/10 dark:nx-bg-white/10" dir="ltr" data-language="jsx" data-theme="default"><span class="line"><span style="color:var(--shiki-token-keyword)">const</span><span style="color:var(--shiki-color-text)"> { </span><span style="color:var(--shiki-token-constant)">mutate</span><span style="color:var(--shiki-color-text)"> } </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-function)">useSWRConfig</span><span style="color:var(--shiki-color-text)">()</span></span>
+<span class="line"> </span>
+<span class="line"><span style="color:var(--shiki-token-function)">mutate</span><span style="color:var(--shiki-color-text)">(</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  key </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">true</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-comment)">// which cache keys are updated</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  </span><span style="color:var(--shiki-token-constant)">undefined</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-comment)">// update cache data to `undefined`</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">  { revalidate</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-color-text)"> </span><span style="color:var(--shiki-token-constant)">false</span><span style="color:var(--shiki-color-text)"> } </span><span style="color:var(--shiki-token-comment)">// do not revalidate</span></span>
+<span class="line"><span style="color:var(--shiki-color-text)">)</span></span></code></pre>
+              <div
+                class="nx-opacity-0 nx-transition [div:hover&gt;&amp;]:nx-opacity-100 focus-within:nx-opacity-100 nx-flex nx-gap-1 nx-absolute nx-m-[11px] nx-right-0 nx-top-0">
+                <button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50 md:nx-hidden"
+                  title="Toggle word wrap"><svg viewBox="0 0 24 24" width="24" height="24"
+                    class="nx-pointer-events-none nx-h-4 nx-w-4">
+                    <path fill="currentColor"
+                      d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3l3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z">
+                    </path>
+                  </svg></button><button
+                  class="nextra-button nx-transition-all active:nx-opacity-50 nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-1.5 dark:nx-bg-primary-300/10 dark:nx-border-white/10 dark:nx-text-gray-400 dark:hover:nx-text-gray-50"
+                  title="Copy code" tabindex="0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" stroke="currentColor"
+                    class="nextra-copy-icon nx-pointer-events-none nx-h-4 nx-w-4">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"></rect>
+                    <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg></button>
+              </div>
+            </div>
+            <p class="nx-mt-6 nx-leading-7 first:nx-mt-0">More information can be found <a
+                class="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+                href="/docs/arguments#multiple-arguments.html">here</a>.</p>
+            <div class="nx-mt-16"></div>
+            <div
+              class="nx-mb-8 nx-flex nx-items-center nx-border-t nx-pt-8 dark:nx-border-neutral-800 contrast-more:nx-border-neutral-400 dark:contrast-more:nx-border-neutral-400 print:nx-hidden">
+              <a title="With Nextjs"
+                class="nx-flex nx-max-w-[50%] nx-items-center nx-gap-1 nx-py-4 nx-text-base nx-font-medium nx-text-gray-600 nx-transition-colors [word-break:break-word] hover:nx-text-primary-600 dark:nx-text-gray-300 md:nx-text-lg ltr:nx-pr-4 rtl:nx-pl-4"
+                href="/docs/with-nextjs.html"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  class="nx-inline nx-h-5 nx-shrink-0 ltr:nx-rotate-180">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>With Nextjs</a><a title="Devtools"
+                class="nx-flex nx-max-w-[50%] nx-items-center nx-gap-1 nx-py-4 nx-text-base nx-font-medium nx-text-gray-600 nx-transition-colors [word-break:break-word] hover:nx-text-primary-600 dark:nx-text-gray-300 md:nx-text-lg ltr:nx-ml-auto ltr:nx-pl-4 ltr:nx-text-right rtl:nx-mr-auto rtl:nx-pr-4 rtl:nx-text-left"
+                href="/docs/advanced/devtools.html">Devtools<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  class="nx-inline nx-h-5 nx-shrink-0 rtl:nx-rotate-180">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg></a>
+            </div>
+          </main>
+        </article>
+      </div>
+      <footer class="nx-bg-gray-100 nx-pb-[env(safe-area-inset-bottom)] dark:nx-bg-neutral-900 print:nx-bg-transparent">
+        <div class="nx-mx-auto nx-flex nx-max-w-[90rem] nx-gap-2 nx-py-2 nx-px-4 nx-hidden"><button
+            title="Change language"
+            class="nx-h-7 nx-rounded-md nx-px-2 nx-text-left nx-text-xs nx-font-medium nx-text-gray-600 nx-transition-colors dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50"
+            id="headlessui-listbox-button-:R2bkm:" type="button" aria-haspopup="listbox" aria-expanded="false"
+            data-headlessui-state=""><span class="nx-flex nx-items-center nx-gap-2"><svg viewBox="2 2 16 16" width="12"
+                height="12" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z"
+                  clip-rule="evenodd"></path>
+              </svg><span class=""></span></span></button><button title="Change theme"
+            class="nx-h-7 nx-rounded-md nx-px-2 nx-text-left nx-text-xs nx-font-medium nx-text-gray-600 nx-transition-colors dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50"
+            id="headlessui-listbox-button-:R2jkm:" type="button" aria-haspopup="listbox" aria-expanded="false"
+            data-headlessui-state="">
+            <div class="nx-flex nx-items-center nx-gap-2 nx-capitalize"><svg fill="none" viewBox="3 3 18 18" width="12"
+                height="12" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" fill="currentColor"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                </path>
+              </svg><span class="">Light</span></div>
+          </button></div>
+        <hr class="dark:nx-border-neutral-800" />
+        <div
+          class="nx-mx-auto nx-flex nx-max-w-[90rem] nx-justify-center nx-py-12 nx-text-gray-600 dark:nx-text-gray-400 md:nx-justify-start nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]">
+          <a href="https://vercel.com/?utm_source=swr_zh-cn" target="_blank" rel="noopener"
+            class="inline-flex items-center no-underline text-current font-semibold"><span
+              class="mr-2">由</span><span><svg height="20" viewBox="0 0 283 64" fill="none">
+                <path fill="currentColor"
+                  d="M141.04 16c-11.04 0-19 7.2-19 18s8.96 18 20 18c6.67 0 12.55-2.64 16.19-7.09l-7.65-4.42c-2.02 2.21-5.09 3.5-8.54 3.5-4.79 0-8.86-2.5-10.37-6.5h28.02c.22-1.12.35-2.28.35-3.5 0-10.79-7.96-17.99-19-17.99zm-9.46 14.5c1.25-3.99 4.67-6.5 9.45-6.5 4.79 0 8.21 2.51 9.45 6.5h-18.9zM248.72 16c-11.04 0-19 7.2-19 18s8.96 18 20 18c6.67 0 12.55-2.64 16.19-7.09l-7.65-4.42c-2.02 2.21-5.09 3.5-8.54 3.5-4.79 0-8.86-2.5-10.37-6.5h28.02c.22-1.12.35-2.28.35-3.5 0-10.79-7.96-17.99-19-17.99zm-9.45 14.5c1.25-3.99 4.67-6.5 9.45-6.5 4.79 0 8.21 2.51 9.45 6.5h-18.9zM200.24 34c0 6 3.92 10 10 10 4.12 0 7.21-1.87 8.8-4.92l7.68 4.43c-3.18 5.3-9.14 8.49-16.48 8.49-11.05 0-19-7.2-19-18s7.96-18 19-18c7.34 0 13.29 3.19 16.48 8.49l-7.68 4.43c-1.59-3.05-4.68-4.92-8.8-4.92-6.07 0-10 4-10 10zm82.48-29v46h-9V5h9zM36.95 0L73.9 64H0L36.95 0zm92.38 5l-27.71 48L73.91 5H84.3l17.32 30 17.32-30h10.39zm58.91 12v9.69c-1-.29-2.06-.49-3.2-.49-5.81 0-10 4-10 10V51h-9V17h9v9.2c0-5.08 5.91-9.2 13.2-9.2z">
+                </path>
+              </svg></span><span class="ml-2">驱动</span></a>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <script id="__NEXT_DATA__"
+    type="application/json">{"props":{"pageProps":{}},"page":"/docs/advanced/cache.html","query":{},"buildId":"XgLf1WDqIYi960Idv4YTM","nextExport":true,"autoExport":true,"isFallback":false,"scriptLoader":[]}</script>
+</body>
+
+</html>

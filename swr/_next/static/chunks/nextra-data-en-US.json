@@ -1,0 +1,329 @@
+{
+  "/blog/swr-v1.html": {
+    "title": "SWR 1.0 发布",
+    "data": {
+      "": "大约两年前，我们 开源了 SWR——广受大家喜爱的小巧 React 数据请求库。今天，我们迎来了另一个里程碑：SWR 1.0 版本发布了！",
+      "whats-new#新变化": "",
+      "smaller-size#更轻量": "性能是 SWR 最重要的特性之一。在 1.0 中，我们在没有删除任何现有功能的前提下，将库变得更轻量：\n核心减小为 41%（压缩后为 24%，3.9 kB）\n安装包减小为 52%\n改进 tree-shaking\n让库更轻量的原因有很多：比如你的应用程序包将更小、运行时更精简，以及 node_modules 目录更小。我们还改进了打包方式，现在支持路径导入：\n如果你不使用 useSWRInfinite，它将不会包含在你的应用程序中。",
+      "fallback-data#预请求数据": "在 1.0 中，有一个新的 fallback 选项，你可以提供任何预请求数据作为带有特定 key 的所有 SWR hook 的初始值：\n这对于 SSG、SSR 和测试中的数据模拟等场景非常有帮助。查看文档 Next.js SSG 和 SSR 了解更多细节。为了更好的一致性以及避免混淆，旧的 initialData 现已被重命名为 fallbackData，它仍然为给定的 hook 提供一个预请求值。",
+      "immutable-mode#不可变模式": "有时你希望将永远不会改变的资源标记为不可变的。最好是禁用它的自动重新请求且只发出一次请求。现在有了这样一个辅助 hook 就更容易了：\n它具有与 useSWR hook 完全相同的 API，但它永远不会在浏览器标签页获得焦点或网络恢复时重新请求。还有一个新选项 revalidateIfStale，你可以使用它来精确地控制行为。了解更多信息请查看这里。",
+      "custom-cache-provider#自定义缓存 Provider": "默认情况下，SWR 使用单个全局缓存来存储所有数据。在 1.0 中，你可以使用新的 provider 选项自定义：\n你可以使用这个新功能做很多强大的事情。这里有几个例子：根据正则更改多个 Key、基于 LocalStorage 的持久缓存、重置测试用例之间的缓存。这个新的缓存 provider API 也更兼容 React 18 的并发渲染。如果你正要添加一个缓存 provider，请确保使用从 useSWRConfig() 返回的全局 mutate 函数。请阅读文档缓存 Provider 了解更多细节。",
+      "useswrconfig#useSWRConfig()": "一个新的 Hook API 来返回所有的全局配置，包括当前缓存 provider 和全局 mutate 函数：\n更多信息请查看这里。",
+      "middleware#中间件": "SWR 中间件为你提供了一种在 SWR hook 之上构建和重用抽象的新方法：\n使用该功能可以实现很多新想法，我们已经构建了一些示例：请求日志记录器、Key 变化时仍保留之前的结果以及序列化对象 key查看 中间件 API 以了解更多细节。",
+      "improvements-and-better-test-coverage#改进以及更好的测试覆盖率": "从 0.x 开始，我们已经做了数百个小改进和 bug 修复。现在 SWR 有 157 个测试，覆盖了数据请求中的大多数边界情况。请阅读更新日志了解更多细节。",
+      "docs-translations#文档翻译": "感谢我们的 contributor 和 Nextra 的 i18n 功能，SWR 文档现在有六种不同的语言：\n英语\n西班牙语\n简体中文\n日语\n韩语\n俄语",
+      "migration-guide#迁移指南": "",
+      "update-useswrinfinite-imports#更新 useSWRInfinite 导入": "useSWRInfinite 需要从 swr/infinite 导入:\n如果你正在使用相应的类型，也要更新导入路径：",
+      "change-revalidate-to-mutate#将 revalidate 改为 mutate": "useSWR 不再返回 revalidate 方法，请改为 mutate：",
+      "rename-initialdata-to-fallbackdata#将 initialData 重命名为 fallbackData": "",
+      "no-more-default-fetcher#取消默认 Fetcher": "SWR 不再提供默认的 fetcher（将数据解析为 JSON 的 fetch 调用）。迁移更改的最简单方法是使用 <SWRConfig> 组件：",
+      "recommend-to-use-the-hook-returned-mutate#建议使用 Hook 返回的 mutate": "这不是一个破坏性的更改，但我们建议一直使用从 useSWRConfig hook 返回的 mutate：\n如果你没有使用缓存 provider，当前的全局导入 import { mutate } from 'swr' 仍然有效。",
+      "renamed-types#重命名类型": "如果你使用 TypeScript，为了保持一致，以下类型名已更改：\n0.x （废弃）\t1.0\tNote\tConfigInterface\tSWRConfiguration\t\tkeyInterface\tKey\t\tresponseInterface\tSWRResponse\t\tRevalidateOptionInterface\tRevalidatorOptions\t\trevalidateType\tRevalidator\t\tSWRInfiniteResponseInterface\tSWRInfiniteResponse\t移到 swr/infinite\tSWRInfiniteConfigInterface\tSWRInfiniteConfiguration\t移到 swr/infinite",
+      "beta-and-unofficial-feature-users#Beta 及非官方功能用户": "如果你使用的是 SWR 的 Beta 版本，或使用任何未公开的 API，请注意以下更改：\nimport { cache } from 'swr' 已经移除；使用新的 useSWRConfig API。\nimport { createCache } from 'swr' 已经移除；使用新的 Cache Provider API。\nrevalidateWhenStale 已重命名为 revalidateIfStale。\nmiddlewares 已重命名为 use。",
+      "changelog#更新日志": "去 GitHub 阅读完整更新日志。",
+      "whats-next#未来": "在未来的版本中，我们将在保持稳定性的同时不断改进。我们还打算拥抱未来的 React 版本，1.0 中的一些新功能和改进已经在为此做准备了。此外，我们仍在开发新功能，以改善在 React 中进行数据请求的体验以及使用 SWR 的体验。如果你对该版本有任何意见，请告诉我们。",
+      "thank-you#致谢！": "特别感谢 Toru Kobayashi 和 Yixuan Xu 对 SWR 的贡献，同时感谢 Paco Coursey、uttk、Tomohiro SHIOYA、Markoz Peña、SeulGi Choi、Fang Lu、Valentin Politov 在翻译和文档方面的贡献。没有他们就没有这个版本。我们还要感谢整个社区、我们的 110 个 contributor（+ 45 个文档 contributor）以及所有帮助过我们以及给过我们意见的人！"
+    }
+  },
+  "/docs/advanced/cache.html": {
+    "title": "缓存",
+    "data": {
+      "": "升级到最新版本（≥ 1.0.0）来使用该功能。\n在大多数情况下，你不应该直接写入缓存，这可能会导致 SWR 不可预知的行为。如果你需要手动操作一个 key，请考虑使用 SWR API。\n参见：数据更改，重置测试用例之间的缓存。\n默认情况下，SWR 使用全局缓存在所有组件之间存储和共享数据。但你也可以通过 SWRConfig 的 provider 选项来自定义这个行为。缓存 provider 旨在通过更多自定义存储启用 SWR。",
+      "cache-provider#缓存 Provider": "缓存 provider 是类似 Map 的对象，它匹配以下 TypeScript 定义（可以从 swr 导入）：\n例如，一个 JavaScript Map 实例可以直接用作 SWR 的缓存 provider。",
+      "create-cache-provider#创建缓存 Provider": "SWRConfig 的 provider 选项接收一个返回缓存 provider 的函数。该 provider 将被 SWRConfig 范围内的所有 SWR hook 使用。例如：\n<Page/> 中的所有 SWR hook 都将从该 Map 实例读取和写入。你还可以针对你的特定用例使用其他缓存 provider 实现。\n在上面的例子中，当 <App/> 组件重新挂载时，provider 也会被重新创建。缓存 provider 应该放在组件树的更高位置，或者放在渲染之外。\n当嵌套时，SWR hook 将使用上层缓存 provider。如果没有上层缓存 provider，则回退到默认 provider，即一个空 Map。\n如果使用了缓存 provider，则全局 mutate 将不适用于 <SWRConfig> 范围内的 SWR hook。请使用访问当前缓存 Provider 代替。",
+      "access-current-cache-provider#访问当前缓存 Provider": "在 React 组件内部，你需要使用 useSWRConfig hook 来访问当前缓存 provider 以及其他配置，包括 mutate：\n如果不在任何 <SWRConfig> 中，将返回默认配置。",
+      "experimental-extend-cache-provider#实验性：扩展缓存 provider": "这是一个实验性的功能，在未来的升级中可能会发生变化。\n当多个 <SWRConfig> 组件嵌套时，可以扩展缓存 provider。provider 函数的第一个参数是上层 <SWRConfig> 的缓存 provider（如果没有父级 <SWRConfig>，则为默认缓存），你可以使用它来扩展缓存 provider：",
+      "examples#示例": "",
+      "localstorage-based-persistent-cache#基于 LocalStorage 的持久缓存": "你可能希望将缓存同步到 localStorage。下面是一个示例实现：\n然后将其作为 provider 使用：\n作为一种改进，你还可以使用内存缓存作为缓冲区，并定期写入 localStorage。你还可以使用 IndexedDB 或 WebSQL 实现类似的分层缓存。",
+      "reset-cache-between-test-cases#重置测试用例之间的缓存": "在测试应用程序时，你可能希望重置测试用例之间的 SWR 缓存。你可以简单地使用空缓存 provider 包装你的应用程序。下面是一个使用 Jest 的例子：",
+      "modify-the-cache-data#Modify the Cache Data": "你不应该直接写入缓存，那样可能会导致不可预知的行为。\nYou can use mutate to modify the cache. For example, you can clear all cache data like the following.\nMore information can be found here."
+    }
+  },
+  "/docs/advanced/devtools.html": {
+    "title": "DevTools",
+    "data": {
+      "": "SWRDevTools不是Vercel官方项目。\nSWRDevTools 是为SWR量身定制的开发工具,它可以帮助你调试SWR的缓存和请求。你可以通过浏览器扩展页面安装SWR DevTools，无需任何配置就可以使用它。\nChrome: https://chrome.google.com/webstore/detail/swr-devtools/liidbicegefhheghhjbomajjaehnjned\nFirefox: https://addons.mozilla.org/en-US/firefox/addon/swr-devtools/\n安装之后，可以在浏览器的开发人员工具中看到SWR面板。更多信息请访问 SWR官网 和 GitHub仓库"
+    }
+  },
+  "/docs/advanced/react-native.html": {
+    "title": "React Native",
+    "data": {
+      "": "升级到最新版本（≥ 1.0.0）来体验该定制。\n与在浏览器中运行的 React 不同，React Native 有着非常不同的使用体验。比如没有“标签聚焦”，而从后台切换到 app 则被视为“聚焦”。要想自定义这些行为，你可以使用 React Native 的 app 状态检测和其他原生移植 API 替换默认的 focus 和 online，并配置 SWR 来使用。",
+      "example#示例": "",
+      "global-setup#全局设置": "你可以将 app 包装在 SWRConfig 下并预设置所有配置",
+      "customize-focus-and-reconnect-events#自定义 focus 和 reconnect 事件": "只有很少的的配置需要你来处理，诸如 isOnline、isVisible、initFocus 以及 initReconnect。isOnline 和 isVisible 是两个返回布尔值的函数，它们用来确定应用程序是否是 \"active\" 的。默认情况下，如果不满足这些条件，SWR 将取消重新请求。在使用 initFocus 和 initReconnect 时，还需要设置一个自定义缓存 provider。可以使用空的 Map() 或任何你喜欢的。\n以 initFocus 为例：\n关于 initReconnect，它需要第三方库例如 NetInfo 来订阅网络状态。具体实现和上面的例子类似：接收 callback 函数并在网络从离线状态恢复时触发它，然后 SWR 会启动重新请求以确保数据始终是最新的。"
+    }
+  },
+  "/docs/advanced/performance.html": {
+    "title": "性能",
+    "data": {
+      "": "SWR 在各种 web 应用中提供了关键功能，因此 性能 是重中之重。SWR 内置的 缓存 和 重复数据删除 会跳过不必要的网络请求，但 useSWR hook 本身的性能仍然很重要。在一个复杂的应用中，单个页面渲染可能会调用数百次 useSWR。SWR 确保你的应用具有：\n没有不必要的请求\n没有不必要的重新渲染\n没有不必要的代码导入\n而无需你更改任何代码。",
+      "deduplication#重复数据删除": "在应用中重用 SWR hooks 非常常见。例如，一个应用渲染 5 次当前用户的头像：\n每个 <Avatar> 组件内部都有一个 useSWR hook。由于它们具有相同的 SWR key，并且几乎同时渲染，因此 只会发送 1 个网络请求。你可以在任何地方重用数据 hooks（比如上面示例中的 useUser），而不用担心性能或重复请求。还有一个 dedupingInterval 选项 用于覆盖默认的重复数据删除间隔。",
+      "deep-comparison#深度比较": "SWR 默认 深度比较 数据更改。如果 data 值没有改变，则不会触发重新渲染。如果你还想更改的话，可以通过 compare 选项 自定义比较函数。比如，某些 API 响应返回一个服务器时间戳，你可能想从数据 diff 中排除它。",
+      "dependency-collection#依赖收集": "useSWR 返回 4 个 有状态的 值：data、error、isLoading和 isValidating，每个都可以独立更新。例如，如果我们在一个完整的数据请求生命周期中打印这些值，则将如下所示：\n在最坏的情况下（第一个请求失败，然后重试成功），你将看到 4 行日志：\n状态的改变是有道理的。但这也意味着组件 渲染了 4 次。如果我们将组件更改为只使用 data：\n神奇的事情发生了 - 现在只有 2 次重新渲染：\n内部发生了完全相同的过程，第一个请求出现了错误，然后我们重试得到了数据。但是，SWR 只更新了组件使用的状态，即：data。如果你不是总使用这3种状态，那么你已经从这个特性中获益了。在 Vercel 的实际应用中，这个优化减少了约 60% 的重新渲染。",
+      "tree-shaking#Tree Shaking": "SWR 满足 tree-shakeable 且没有副作用。这意味着如果你只导入核心的 useSWR API，像 useSWRInfinite 这样的未使用的 API 将不会绑定到你的应用中。"
+    }
+  },
+  "/docs/api.html": {
+    "title": "API",
+    "data": {
+      "parameters#参数": "key: 请求的唯一 key string（或者是 function / array / null） (详情), （高级用法）\nfetcher:（可选）一个请求数据的 Promise 返回函数 （详情）\noptions:（可选）该 SWR hook 的选项对象",
+      "return-values#返回值": "data: 通过 fetcher 用给定的 key 获取的数据（如未完全加载，返回 undefined）\nerror: fetcher 抛出的错误（或者是 undefined）\nisLoading: 是否有一个正在进行中的请求且当前没有“已加载的数据“。预设数据及之前的数据不会被视为“已加载的数据“\nisValidating: 是否有请求或重新验证加载\nmutate(data?, options?): 更改缓存数据的函数 （详情）\n更多信息可以参考这里.",
+      "options#选项": "suspense = false: 启用 React Suspense 模式 （详情）\nfetcher(args): fetcher 函数\nrevalidateIfStale = true: 即使存在陈旧数据，也自动重新验证（详情）\nrevalidateOnMount: 在挂载组件时启用或禁用自动重新验证 （详情）\nrevalidateOnFocus = true: 窗口聚焦时自动重新验证 （详情）\nrevalidateOnReconnect = true: 浏览器恢复网络连接时自动重新验证（通过 navigator.onLine） （详情）\nrefreshInterval （详情）:\n默认 disabled: refreshInterval = 0\n如果设置为数字，轮询间隔（以毫秒为单位）\n如果设置为函数，该函数将接收最新数据，并且应以毫秒为单位返回间隔\nrefreshWhenHidden = false: 窗口不可见时进行轮询（如果启用了 refreshInterval）\nrefreshWhenOffline = false: 浏览器离线时轮询（由 navigator.onLine 确定）\nshouldRetryOnError = true: fetcher 有错误时重试\ndedupingInterval = 2000: 删除一段时间内相同 key 的重复请求（以毫秒为单位）\nfocusThrottleInterval = 5000: 在一段时间内只重新验证一次（以毫秒为单位）\nloadingTimeout = 3000: 超时触发 onLoadingSlow 事件（以毫秒为单位）\nerrorRetryInterval = 5000: 错误重试的时间间隔（以毫秒为单位）\nerrorRetryCount: 错误重试的最大次数\nfallback: 多个回退数据的 key-value 对象（示例）\nfallbackData: 此 hook 需要返回的初始数据\nkeepPreviousData = false: 在新数据加载完成之前使用 key 上一次缓存过的数据 （详情）\nonLoadingSlow(key, config): 请求加载时间过长时的回调函数（参考 loadingTimeout）\nonSuccess(data, key, config): 请求成功完成时的回调函数\nonError(err, key, config): 请求返回错误时的回调函数\nonErrorRetry(err, key, config, revalidate, revalidateOps): 错误重试的处理函数\nonDiscarded(key): 请求由于竞态条件而被忽略时的回调函数\ncompare(a, b): 比较函数，用来检测返回的数据何时已更改，以防止伪造的重新渲染。默认情况下使用 stable-hash。\nisPaused(): 用于暂停所有数据请求，如果返回值为 true，请求的数据和错误都会被忽略。默认返回值为 false。\nuse: 中间件函数数组 （详情）\n网络较慢（2G,  70Kbps）时， 默认情况下 errorRetryInterval 为 10s， \nloadingTimeout 为 5s。\n你还可以使用 全局配置 来提供默认选项。"
+    }
+  },
+  "/docs/advanced/understanding.html": {
+    "title": "理解 SWR",
+    "data": {
+      "state-machine#状态机制": "useSWR 会根据 fetcher 函数的状态返回 data，error，isLoading 和 isValidating。以下这些图片描述了 SWR 在不同情况下是如何返回值的。",
+      "fetch-and-revalidate#请求与重新请求": "这种模式表示请求数据，并在之后重新请求的场景。",
+      "key-change#Key 的变化": "这种模式表示在请求数据，再改变 key 值，并在之后重新请求的场景。",
+      "key-change--previous-data#Key 的变化 + 保留之前的数据": "这种模式表示在开启 keepPreviousData 选项时，请求数据，再改变 key 值，并在之后重新请求的场景。",
+      "fallback#设置预设数据": "这种模式表示设置了预设数据时，请求数据，并在之后进行重新请求的场景。",
+      "key-change--fallback#Key 的变化 + 设置预设数据": "这种模式表示在设置预设数据时，请求数据，再改变 key 值，并在之后进行重新请求的场景。",
+      "key-change--previous-data--fallback#Key 的变化 + 保留之前的数据 + 设置预设数据": "这种模式表示在开启 keepPreviousData 选项并设置预设数据时，请求数据，再改变 key 值，并在之后进行重新请求的场景。",
+      "combining-with-isloading-and-isvalidating-for-better-ux#结合 isLoading 和 isValidating 以获得更好的用户体验": "相比于现有的 isValidating ，isLoading 是一个新的属性，它可以帮助我们应对更加普遍的用户加载场景。\n无论数据是否已加载，只要有一个正在进行中的请求，isValidating 都会变为 true 。\n当数据尚未加载并且有一个正在进行的请求时，isLoading 会变为 true 。\n简而言之，我们可以使用 isValidating 来表示每次正在进行的重新请求；使用 isLoading 来表示 SWR 正在重新请求中，但目前还没有数据可以展示。\n预设数据（Fallback Data）和之前的数据（Previous Data）不会被认为是“已加载的数据”，因此在设置了预设数据或启用 keepPreviousData 选项时，你可能有数据要展示。\n点击 这里 查看完整代码示例。",
+      "return-previous-data-for-better-ux#返回之前的数据以获得更好的用户体验": "在用户连续操作的情况下进行数据请求时，例如输入时实时搜索，保留之前的数据可以极大提升用户体验，keepPreviousData 选项可以用于启用该行为。下例是一个简单的用户搜索界面:\n如果启用了 keepPreviousData，即使我们改变了 SWR key 值并以新的 key 值重新开始加载，我们仍然可以保留之前的数据。\n在这里查看完整代码示例：https://codesandbox.io/s/swr-keeppreviousdata-fsjz3m",
+      "dependency-collection-for-performance#性能依赖关系收集": "SWR 只会在组件中所使用的状态被更新时，触发重新渲染。如果只在组件中使用 data，SWR 将忽略其他属性（如 isValidating 和 isLoading）的更新。这大大减少了渲染次数。点击 这里 查看更多信息。"
+    }
+  },
+  "/docs/conditional-fetching.html": {
+    "title": "条件数据请求",
+    "data": {
+      "conditional#按需请求": "使用 null 或传一个函数作为 key 来有条件地请求数据。如果函数抛出错误或返回 falsy 值，SWR 将不会启动请求。",
+      "dependent#依赖请求": "SWR 还允许请求依赖于其他数据的数据。当需要一段动态数据才能进行下一次数据请求时，它可以确保最大程度的并行性（avoiding waterfalls）以及串行请求。"
+    }
+  },
+  "/docs/data-fetching.html": {
+    "title": "数据请求",
+    "data": {
+      "": "这是 SWR 的基本 API。这里的 fetcher 是一个异步函数，它 接受 SWR 的 key 并返回数据。返回值将作为 data 传递，如果抛出错误，将作为 error 被捕获。\n注意：如果 fetcher 是全局配置提供的，可以从参数中忽略。",
+      "fetch#Fetch": "你可以使用任何库来处理数据请求，比如一个 fetch polyfill developit/unfetch：\n如果你使用的是 Next.js，则不需要引入这个 polyfill：\n新的内置 Polyfills： fetch()、URL、和Object.assign",
+      "axios#Axios": "",
+      "graphql#GraphQL": "或者配合类似 graphql-request 的库使用 GraphQL：\n如果要把变量传递给 GraphQL query，请查看 多参数。"
+    }
+  },
+  "/docs/arguments.html": {
+    "title": "参数",
+    "data": {
+      "": "默认情况下，key 将作为参数传递给 fetcher。所以下面这 3 个表达式是等价的：",
+      "multiple-arguments#多个参数": "在某些场景中，向 fetcher 函数传递多个参数（可以是任何值或对象）非常有用。例如授权请求：\n这是 错误的。 因为数据的标识符（也是缓存 key）是 '/api/user'，所以即使 token 变了，SWR 仍然会使用相同的 key 并返回错误的数据。相反，你可以使用一个 数组 作为参数 key，它包含 fetcher 的多个参数：\nfetcher 函数会按原样接受 key 参数，并且缓存 key 也将与整个 key 参数相关联。在上面的例子中，url 和 token 都与缓存 key 相关联。\n在之前的版本 (< 2.0.0) 中，当 key 参数是数组类型时，fetcher 函数将以展开参数的形式接收到原始 key。例如，key [url, token] 会变成 fetcher 函数的两个参数 (url, token)。",
+      "passing-objects#传入对象": "从 SWR 1.1.0 开始，object 类型的 keys 可以在内部自动被序列化。\n假设你还有另一个使用用户范围来请求数据的函数：fetchWithUser(api, user)。你可以执行以下操作：\n你可以直接传递一个对象作为 key，fetcher 也会接收该对象：\n在旧版本(< 1.1.0)中，SWR 会浅比较每次渲染时的参数，如果其中任何一个发生了变化，就会触发重新验证。"
+    }
+  },
+  "/docs/error-handling.html": {
+    "title": "错误处理",
+    "data": {
+      "": "如果在 fetcher 中抛出错误，hook 会将其作为 error 返回。\n如果 fetch promise 被拒绝，将定义 error 对象。",
+      "status-code-and-error-object#状态码和错误对象": "有时我们希望 API 在返回状态码的同时返回一个错误对象。它们对客户端都是有用的。我们可以自定义 fetcher 以返回更多信息。如果状态码不是 2xx，我们则认为它是一个错误，即使它可以被解析为 JSON：\n注意：data 和 error 可以同时存在。所以 UI 可以在知道即将到来的请求失败时显示现有数据。\n这里有一个示例。",
+      "error-retry#错误重试": "在出现错误时 SWR 使用指数退避算法重发请求。该算法允许应用从错误中快速恢复，而不会浪费资源频繁地重试。你还可以通过 onErrorRetry 选项覆盖该行为：\n这个回调让你可以灵活的根据各种条件重试。你也可以通过设置 shouldRetryOnError: false 来禁用它。也可以通过全局配置 context 来提供它。",
+      "global-error-report#全局错误报告": "你总是可以响应性的在组件内部得到 error 对象。但如果你想要全局处理错误，通知 UI 显示一个 toast 或者一个 snackbar，或在某处报告它，比如 Sentry，可以用 onError 事件："
+    }
+  },
+  "/docs/global-configuration.html": {
+    "title": "全局配置",
+    "data": {
+      "": "SWRConfig 可以为所有的 SWR hook 提供全局配置 (选项)。\n在以下示例中，所有的 SWR hook 都将使用提供的相同的 fetcher 来加载 JSON 数据，默认每 3 秒刷新一次：",
+      "nesting-configurations#嵌套配置": "SWRConfig 会合并来自父层上下文的配置。它可以接收一个对象式或函数式配置。函数式配置可以从参数中得到父层的配置信息，并返回一个你自定义定制的配置。",
+      "object-configuration-example#对象式配置示例": "",
+      "functional-configuration-example#函数式配置示例": "",
+      "extra-apis#额外的 API": "",
+      "cache-provider#缓存 Provider": "除去以上所列的 选项，SWRConfig 还接受一个可选的 provider 函数。详细信息请参考 缓存 这一节。",
+      "access-to-global-configurations#访问全局配置": "你可以使用 useSWRConfig hook 来获取全局配置，以及数据更改和缓存：\n嵌套配置将会被扩展。如果没有使用 <SWRConfig>，将返回默认配置。"
+    }
+  },
+  "/docs/getting-started.html": {
+    "title": "入门",
+    "data": {
+      "installation#安装": "在 React 项目目录运行以下命令：",
+      "quick-start#快速开始": "对于返回 JSON 数据的普通 RESTful APIs，首先需要创建一个 fetcher 函数，这个函数只是原生 fetch 的包装：\n如果要使用 GraphQL API 或类似 Axios 的库，可以自己创建 fetcher 函数。 点击 这里 查看更多示例。\n然后你可以 import useSWR 并开始在任何函数组件中使用它：\n通常，一个请求有 3 种可能的状态：“loading”、“ready”或“error”。你可以使用 data、error 和 isLoading 的值来确定当前的请求状态，并返回相应的 UI。",
+      "make-it-reusable#可复用组件": "在构建 web 应用时，你可能需要在 UI 的很多地方重用数据。在 SWR 上创建可重用的数据 hooks 非常容易：\n在组件中使用它：\n通过采用这种模式，你可以不必以命令的方式请求数据：开始请求、更新加载状态并返回最终结果。 相反，你的代码更具有声明性：你只需要指定组件使用什么数据即可。",
+      "example#示例": "在一个真实的示例中，我们的网站显示一个导航条和内容，都取决于 user：\n传统上，我们在顶级组件中使用 useEffect 请求一次数据，然后通过 props 将其传递给子组件（注意，我们现在不处理错误状态）：\n通常，我们需要将所有的数据请求都保存在顶级组件中，并为树深处的每个组件添加 props。如果我们给页面添加更多的数据依赖，代码将变得更加难以维护。虽然我们可以使用 Context 来避免传递 props，但仍然存在动态内容问题：页面内容中的组件可以是动态的，顶级组件可能不知道其子组件将需要什么数据。SWR 完美地解决了这个问题。使用我们刚刚创建的 useUser hook，可以将代码重构为:\n现在数据已 绑定 到需要该数据的组件上，并且所有组件都是相互 独立 的。所有的父组件都不需要关心关于数据或数据传递的任何信息。它们只是渲染。现在代码更简单，更易于维护了。最棒的是，只会有 1 个请求 发送到 API，因为它们使用相同的 SWR key，因此请求会被自动 去除重复、缓存 和 共享。而且，你的应用现在能够在 用户聚焦或网络重连 时重新请求数据！这意味着当用户的笔记本电脑从睡眠状态唤醒，或用户在切换浏览器标签页时，数据将自动刷新。"
+    }
+  },
+  "/docs/middleware.html": {
+    "title": "中间件",
+    "data": {
+      "": "升级到最新版本（≥ 1.0.0）来使用该功能。\n中间件是 SWR 1.0 中新增的一个功能，它让你能够在 SWR hook 之前和之后执行代码。",
+      "usage#用法": "中间件接收 SWR hook，可以在运行它之前和之后执行逻辑。如果有多个中间件，则每个中间件包装下一个中间件。列表中的最后一个中间件将接收原始的 SWR hook useSWR。",
+      "api#API": "Notes: 函数名开头最好不要大写 (如使用 myMiddleware 来代替 MyMiddleware)，否则 React lint 规则会抛出 Rules of Hook 的错误TypeScript\n你可以将一个中间件数组作为选项传递给 SWRConfig 或 useSWR：",
+      "extend#扩展": "中间件会像常规选项一样进行扩展。例如：\n相当于：",
+      "multiple-middleware#多个中间件": "每个中间件包装下一个中间件，最后一个只包装 SWR hook。例如：\n中间件执行的顺序是 a → b → c，如下所示：",
+      "examples#示例": "",
+      "request-logger#请求日志记录器": "我们以构建一个简单的请求日志记录器中间件为例。它打印出从这个 SWR hook 发送的所有 fetcher 请求。你也可以将这个中间件添加到 SWRConfig 中，以用于所有的 SWR hook。\n每次触发请求时，它都会将 SWR key 输出到控制台：",
+      "keep-previous-result#保留之前的结果": "有时你希望 useSWR 返回的数据“延迟”。即使 key 发生了变化，你仍然希望它返回之前的结果，直到新数据加载完毕。这可以与 useRef 一起构建一个延迟中间件。在这个例子中，我们还将扩展 useSWR hook 的返回对象：\n当你需要一个 SWR hook 延迟时，你可以使用这个中间件：",
+      "serialize-object-keys#序列化对象 key": "从 SWR 1.1.0 开始，object 类型的 keys 可以在内部自动被序列化。\n在旧版本(< 1.1.0)中，SWR 会浅比较每次渲染时的参数，如果其中任何一个发生了变化，就会触发重新验证。\n如果你只是传入可序列化的对象作为 key。你可以序列化对象 key 以确保其稳定性，一个简单的中间件可以帮助你：\n你无需担心对象在渲染期间可能会发生变化。它总是被序列化为相同的字符串，并且 fetcher 仍将接收这些对象参数。\n此外，你还可以使用 fast-json-stable-stringify 之类的库代替 JSON.stringify — 更快更稳定。"
+    }
+  },
+  "/docs/mutation.html": {
+    "title": "数据更改 & 重新验证",
+    "data": {
+      "": "SWR 提供了 mutate 和 useSWRMutation 两个 API 用于更改远程数据及相关缓存。",
+      "mutate#mutate": "有两种方法可以使用 mutate API 来进行数据更改，全局数据更改 API 可以更改任何 key 的数据，而绑定数据更改只能更改对应 SWR hook 的数据。",
+      "global-mutate#全局数据更改": "推荐使用 useSWRConfig hook 获取全局 mutator：\n你也可以全局引入它：\n如果在调用全局 mutator 函数时只提供了 key 参数，那么除非有一个使用相同 key 的 SWR hook 被挂载，否则缓存不会被更新，也不会触发重新验证。",
+      "bound-mutate#绑定数据更改": "绑定数据更改可以更便捷的更改当前 key 数据，它的 key 与传递给 useSWR 的 key 相绑定，并接收 data 作为第一个参数。它在功能上等同于上文提到的的全局 mutate 函数，但它不需要传入 key 参数：",
+      "revalidation#重新验证": "当你调用 mutate(key)（或者只是使用绑定数据更改 API mutate()）时没有传入任何数据，它会触发资源的重新验证(将数据标记为已过期并触发重新请求)。这个例子展示了当用户点击 “Logout” 按钮时如何自动重新请求登陆信息。\n它向同一个 缓存 provider 范围内的 SWR hook 进行广播。如果不存在缓存 provider 就会向 SWR hook 进行广播。",
+      "api#API": "",
+      "parameters#Parameters": "key：与 useSWR 的 key 相同，但函数表现为一个 过滤函数。\ndata：用于更新客户端缓存的数据，或者是一个用于进行远程数据更改的异步函数。\noptions：接受下列选项\noptimisticData：用于立即更新客户端缓存的数据，或是一个接受当前数据并返回新的客户端缓存数据的函数，通常用于乐观 UI。\nrevalidate = true: 异步更新完成后是否应该重新验证缓存。如果设置为函数，该函数将接收 data 和 key 作为参数。\npopulateCache = true：将远程数据更改的结果写入缓存，或者将接收新结果和当前结果作为参数并返回数据更改结果的函数。\nrollbackOnError = true：如果远程数据更改失败，缓存会回滚。或者接受一个函数，它接收从 fetcher 抛出的错误作为参数，并返回一个布尔值判断是否应该回滚。\nthrowOnError = true：数据更改失败时抛出错误。",
+      "return-values#返回值": "mutate 返回参数的 data 是被解析过的结果。传递给 mutate 的函数将返回一个更新后的数据，用于更新相应的缓存值。如果在执行函数时出现错误，错误将被抛出，以便进行合适的处理。",
+      "useswrmutation#useSWRMutation": "SWR 还提供了 useSWRMutation 作为一个远程数据更改的 hook。远程数据更改只能手动触发，而不像 useSWR 那样会自动触发。另外，这个 hook 不会与其他 useSWRMutation hook 共享状态。",
+      "useswrmutation-api#API": "",
+      "useswrmutation-parameters#参数": "key: 与 mutate 的 key 相同\nfetcher(key, { arg })：一个用于远程数据更改的异步函数\noptions：一个可选的对象，包含了下列属性：\noptimisticData：与 mutate 的 optimisticData 相同\nrevalidate = true：与 mutate 的 revalidate 相同\npopulateCache = false：与 mutate' 的 populateCache 相同 ，但默认值为 false\nrollbackOnError = true：与 mutate 的 rollbackOnError 相同\nthrowOnError = true： 与 mutate' 的 throwOnError 相同\nonSuccess(data, key, config):　远程数据更改完成时的回调函数\nonError(err, key, config): 远程数据更改返回错误时的回调函数",
+      "useswrmutation-return-values#返回值": "data：从 fetcher 返回给定 key 的数据\nerror：fetcher 中抛出的错误（或 undefined）\ntrigger(arg, options)：一个用于触发远程数据更改的函数\nreset：一个用于重置状态的函数（ data, error, isMutating ）\nisMutating：有一个正在进行中的远程数据变更",
+      "useswrmutation-basic-usage#基本用法": "如果你想在渲染时使用数据更改的结果，你可以从 useSWRMutation 的返回值中获得它。\nuseSWRMutation 与 useSWR 共享一个缓存空间，所以它可以检测并避免 useSWR 间的竞态条件。它还支持 mutate 的功能，如乐观更新和错误回滚。你可以将这些选项传入 useSWRMutation 和它的 trigger 函数。",
+      "defer-loading-data-until-needed#延迟加载数据，直到需要的时候": "你也可以使用 useSWRMutation 来加载数据。useSWRMutation 在 trigger 被调用之前永远不会开始请求，所以你可以推迟到真正需要时再加载数据。",
+      "optimistic-updates#乐观更新": "很多情况下，应用本地的数据更改是一个让人感觉快速的好方法——不需要等待远程数据源。使用 optimisticData 选项，你可以手动更新你的本地数据，同时等待远程数据更改的完成。搭配 rollbackOnError 使用，你还可以控制何时回滚数据。\nupdateFn 应该是一个 promise 或者异步函数以处理远程数据更改，它应该返回更新后的数据。\n你也可以为 optimisticData 传入一个函数使其可以获取当前数据：\n你还可以通过 useSWRMutation 和 trigger 实现相同的功能：",
+      "rollback-on-errors#错误回滚": "当你设置了optimisticData 选项时，有可能在乐观数据展示给用户后，远程数据更改却失败了。在这种情况下，你可以启用rollbackOnError，将本地缓存恢复到之前的状态，确保用户看到的是正确的数据。",
+      "update-cache-after-mutation#在数据更改后更新缓存": "有时远程数据更改的请求会直接返回更新后的数据，因此不需要发送额外的请求来加载它。\n你可以启用 populateCache 选项，用数据更改的响应来更新 useSWR 的缓存。\n或使用 useSWRMutation hook：\n当 optimisticData 与 rollbackOnError 搭配使用时，你将获得最佳的乐观 UI 体验。",
+      "avoid-race-conditions#避免竞态条件": "mutate 和 useSWRMutation 都可以避免 useSWR 之间的竞态条件。例如：\n正常情况下 useSWR hook 可能会因为聚焦，轮询或者其他条件在任何时间刷新，这使得展示的 username 尽可能是最新的。然而，由于我们在useSWR 的刷新过程中几乎同时发生了一个数据更改，可能会出现 getUser 请求更早开始，但是花的时间比 updateUser 更长，导致竞态情况。幸运的是 useSWRMutation 可以为你自动处理这种情况。在数据更改后，它会告诉 useSWR 放弃正在进行的请求和重新验证，所以旧的数据永远不会被显示。",
+      "mutate-based-on-current-data#基于当前数据进行数据更改": "有时你想根据当前的数据来更新部分数据。通过 mutate，你可以传入一个接收当前缓存值的异步函数，如果有的话，并返回一个更新的文档。",
+      "mutate-multiple-items#更改多项数据": "全局 mutate API 接受一个过滤函数，它接受 key 作为参数并返回需要重新验证的 key。过滤函数会被应用于所有已有的缓存 key。\n这同时适用于如数组等任何类型的 key 。这个数据更改会匹配所有第一个元素为 'item' 的 key。\n过滤函数应用于所有现有的缓存 key，所以当使用多种类型的 key 时，你不应该假设 key 的类型。\n你可以使用过滤函数来清除所有的缓存数据，这在退出登陆时很有用："
+    }
+  },
+  "/docs/prefetching.html": {
+    "title": "预请求数据",
+    "data": {
+      "top-level-page-data#顶级页面数据": "有很多方法可以为 SWR 预请求数据。对于顶级请求，强烈推荐 rel=\"preload\"\n只需把它放在HTML的 <head> 里即可。简单、快速、原生。它将在 HTML 加载时预请求数据，甚至是在 JavaScript 开始下载之前。使用相同 URL 的所有传入 fetch 请求都将重用结果(当然包括SWR)。",
+      "programmatically-prefetch#手动预请求": "SWR 提供 preload API 来以编程方式预加载资源并将结果存储在缓存中。preload 接受 key 和 fetcher 作为参数。你甚至可以在React之外调用 preload。\n在 React 渲染树中，preload也可以在事件处理或 effects 中使用。\n配合 Next.js 的 页面预加载，你将能立即加载下一页和数据。在 Suspense 模式下，你应该利用preload来避免网络请求瀑布问题。",
+      "pre-fill-data#数据预填充": "如果你想在 SWR 缓存中预填充已经存在的数据，你可以使用 fallbackData 选项，例如：\n当 SWR 还没有获取此次数据的时候， 这个 hook 将返回 prefetchedData 作为 fallback 。你也可以为所有的 SWR hooks 和不同的 key 配置 <SWRConfig> 和它的 fallback 选项。 查看 Next.js SSG 和 SSR 了解更多详细信息。"
+    }
+  },
+  "/docs/pagination.html": {
+    "title": "分页",
+    "data": {
+      "": "请更新到最新版本 (≥ 0.3.0) 来用此 API。原来的 useSWRPages API 已废弃。\nSWR 提供了一个专用 API useSWRInfinite 来支持常见的 UI 模式，比如 分页 和 无限加载。",
+      "when-to-use-useswr#何时应该继续使用 useSWR": "",
+      "pagination#分页": "首先，我们可能 并不 需要使用 useSWRInfinite，而是直接使用 useSWR，例如我们正在构建以下场景：\n...这是一个典型的分页用户界面。来看看它如何用 useSWR 轻松实现：\n我们还可以为这个页面组件创建一个抽象层。：\n由于 SWR 的缓存，我们可以预加载下一页的页面。我们将下一页的页面渲染到隐藏的 div 中，这样 SWR 会触发下一页页面的数据获取。当用户导航到下一页时，数据就已经存在了：\n仅用一行代码，我们就获得了更好的用户体验。useSWR hook 已经非常强大了，能够覆盖大多数的场景。",
+      "infinite-loading#无限加载": "有时我们想构建一个无限加载的界面，通过一个 \"Load More\" 按钮向列表追加数据（或者当你滚动时自动加载）：\n要实现这个功能，我们需要在该页面上进行动态的数据请求。React Hooks 中存在这 两个规则，所以我们 不能 这么写：\n相反，我们可以使用我们创建的 <Page/> 抽象来实现这个功能:",
+      "advanced-cases#高级用例": "但是，在某些高级用例中，上述的解决方案并不适用。例如，我们仍然实现相同的 \"Load More\" 界面，但还需要显示一共有多少项。我们无法再使用 <Page /> 的解决方案，因为顶层 UI (<App/>) 需要每个页面中的数据。\n此外，如果分页的 API 是 **基于游标（cursor）**的，那么这个解决方案也不适用。因为每个页面都需要前一页的数据，它们不是隔离的。这意味着我们需要一个更高级的解决方案来解决这个问题，因此，我们引入了一个新的 useSWRInfinite Hook。。",
+      "useswrinfinite#useSWRInfinite": "useSWRInfinite 让我们能够通过一个 Hook 触发多个请求。就像下面这样：\n与 useSWR 类似，这个新 Hook 接受一个返回请求 key 的函数、一个 fetcher 函数和一些选项。它返回和 useSWR 一样的所有值，并增加了两个额外的值：页面大小和一个页面大小的 setter，类似于 React 的 state。在无限滚动中，一个 “页面” 就是一个请求，我们的目标是获取多个页面并将它们渲染出来。\n如果你使用的是 SWR 0.x 版本，则需要从 swr 导入 useSWRInfinite：\nimport { useSWRInfinite } from 'swr'",
+      "api#API": "",
+      "parameters#参数": "getKey: 一个接受索引值和上一页数据，并返回页面 key 值的函数\nfetcher: 和 useSWR 的 fetcher 函数 一样\noptions: 接受 useSWR 支持的所有选项，以及四个额外选项：\ninitialSize = 1: 最初应加载的页面数量\nrevalidateAll = false: 始终尝试重新验证所有页面\nrevalidateFirstPage = true: 始终尝试重新验证第一页\npersistSize = false: 当第一页的 key 发生变化时，不将 page size（或者 initialSize 如果设置了该参数）重置为 1\nparallel = false: 并行加载多页\n请注意，initialSize 选项不允许在运行时更改。",
+      "return-values#返回值": "data: 由每一页的请求的响应数据组成的数组\nerror: 与 useSWR 的 error 返回值相同\nisLoading: 与 useSWR 的 isLoading 返回值相同\nisValidating: 与 useSWR 的 isValidating 返回值相同\nmutate: 和 useSWR 的绑定 mutate 函数一样，但可以用于操作 data 数组\nsize: 即将请求并返回的页面数量\nsetSize: 设置需要被请求的页面数量",
+      "example-1-index-based-paginated-api#示例 1：基于索引的分页 API": "普通的基于索引的 API：\ngetKey 函数是 useSWRInfinite 和 useSWR 之间的主要区别。它接受当前页的索引以及上一页的数据。因此可以很好地支持基于索引和基于游标的分页 API。此外，data 不再只是一个 API 响应。它是多个 API 响应的数组：",
+      "example-2-cursor-or-offset-based-paginated-api#示例 2：基于游标或偏移的分页 API": "假设现在 API 需要一个游标，并将下一个游标和数据一起返回：\n我们可以将 getKey 函数改为下面这样：",
+      "parallel-fetching-mode#并行请求模式": "请升级至最新版本（≥ 2.1.0）以使用此 API\nuseSWRInfinite 的默认行为是按顺序获取每个页面的数据，因为 key 的创建基于先前获取的数据。然而，对于一大堆没有相互依赖关系的页面，按顺序获取数据可能不是最优的，尤其是当页面数量很多时。通过将 parallel 选项设置为 true，你可以独立地并行获取页面数据，这可以显着加快加载过程。\n当你启用了 parallel 选项，getKey 函数的参数 previousPageData 会变为 null。",
+      "revalidate-specific-pages#重新验证特定页面": "请升级至最新版本（≥ 2.2.5）以使用此 API\nuseSWRInfinite 默认行为是重新验证所有已加载的页面，但你可能只想重新验证已更改的特定页面，你可以通过给 revalidate 选项传递一个函数来限定需要重新验证的页面。每个页面都会调用 revalidate 函数。",
+      "global-mutate-with-useswrinfinite#全局变更 useSWRInfinite 数据": "useSWRInfinite 会将所有页面数据存储在缓存中，并使用特殊的缓存 key 来存储每个页面的数据。因此，您需要在 swr/infinite 中使用 unstable_serialize 对数据进行序列化，才能使用全局的 mutate 方法重新验证数据。\n正如命名所示，unstable_serialize 目前并不是一个稳定的 API，所以我们可能会在未来修改它。",
+      "advanced-features#高级特性": "这里有一个示例 演示了如何使用 useSWRInfinite 实现以下功能：\n显示加载状态\n如果为空，显示一个特殊的 UI\n如果加载到最后一页，禁用 \"Load More\" 按钮\n可变的数据源\n刷新整个列表"
+    }
+  },
+  "/docs/revalidation.html": {
+    "title": "自动重新请求",
+    "data": {
+      "": "如果你想手动重新请求数据，请查看 mutation。",
+      "revalidate-on-focus#聚焦时重新请求": "当你重新聚焦一个页面或在标签页之间切换时，SWR 会自动重新请求数据。这个功能非常实用，可以保持网站同步到最新数据。对于在长时间位于后台的标签页，或 休眠 的电脑等情况下刷新数据也很有帮助。\n该特性默认是启用的。你可以通过 revalidateOnFocus 选项禁用它。",
+      "revalidate-on-interval#定期重新请求": "在很多情况下，数据会因为多个设备、多个用户、多个选项卡而发生改变。那么我们如何随着时间的推移更新屏幕上的数据呢？SWR 会为你提供自动重新请求数据的选项。这很 智能，意味着只有与 hook 相关的组件 在屏幕上 时，才会重新请求。\n你可以通过设置 refreshInterval 值来启用它：\n还有其他选项，例如 refreshWhenHidden 和 refreshWhenOffline。这两项默认都是禁用的，所以当网页不在屏幕上或没有网络连接时，SWR 不会请求。",
+      "revalidate-on-reconnect#重新连接时重新请求": "当用户重新联机时重新请求非常有用。这种情况经常发生在用户解锁了他们的计算机但网络还没有连上时。为了确保数据始终是最新的，SWR 会在网络恢复时自动重新请求。该特性默认是启用的。你可以通过 revalidateOnReconnect 选项禁用它。",
+      "disable-automatic-revalidations#禁用自动重新请求": "如果资源是不可变的，即使我们再怎么重新请求也永远不会发生任何改变，那么我们可以禁用它的所有的自动重新请求。从 1.0 版本开始，SWR 提供了一个辅助 hook useSWRImmutable 来标记资源为不可变的：\n它具有与普通 useSWR hook 相同的 API 接口。你还可以通过禁用以下重新请求​​选项来执行相同的操作：\nrevalidateIfStale 控制 SWR 在挂载并且存在陈旧数据时是否应重新请求。上面这两个 hook 做完全相同的事情。一旦数据被缓存，他们将永远不会再次请求它。",
+      "revalidate-on-mount#挂载时重新请求": "在组件挂载时，强制覆盖 SWR 的重新请求，这非常有用。默认情况下，revalidateOnMount的值为undefined。SWR hook 挂载过程如下:\n首先，它检查是否定义了 revalidateOnMount。如果为 true，则开始请求，如果为 false，则停止请求。\nrevalidateIfStale 有助于控制挂载行为。默认情况下，revalidateIfStale 设置为 true。如果 revalidateIfStale 设置为 true，则只有存在缓存数据时才会重新获取数据，否则不会重新获取。"
+    }
+  },
+  "/docs/subscription.html": {
+    "title": "订阅",
+    "data": {
+      "": "请升级到最新版本 (≥ 2.1.0) 来使用这个 API.",
+      "useswrsubscription#useSWRSubscription": "useSWRSubscription 是一个使用 SWR 订阅实时数据源的 React Hook。",
+      "api#API": "这个 hook 使用提供的 subscribe 函数订阅实时数据源，并返回接收到的最新数据和遇到的任何错误。当接收到新事件时，该 hook 会自动更新返回的数据。",
+      "parameters#参数": "key: 这是一个用于标识所订阅数据的唯一 key 值, 与 useSWR key 参数的用法相同。\nsubscribe: 这是一个用于订阅实时数据源的函数。它接收以下参数:\nkey: 与 useSWRSubscription 的 key 参数相同。\noptions: 一个带有以下属性的对象：\nnext: 一个函数，它接收一个错误和数据，然后使用从实时数据源接收到的最新数据来更新状态。\n一个 subscribe 函数的例子\n你也可以给 next 函数的 data 参数一个函数，它接收上一次的数据作为第一个参数，然后返回一个新的数据。",
+      "return-values#返回值": "state: 一个带有以下属性的对象:\ndata: 来自实时数据源的最新数据。\nerror: 如果在订阅实时数据源时发生错误，则为一个 Error 对象，否则为 undefined 。\n当接收到新数据时，error 会被重置为 undefined。",
+      "usage#基本用法": "使用 useSWRSubscription 订阅 Firestore 数据源的示例代码：\n使用 useSWRSubscription 订阅 WebSocket 数据源的示例代码：\n你也可以在这个页面查看 useSWRSubscription 的 TypeScript 示例。",
+      "deduplication#去重": "useSWRSubscription 会对具有相同 key 的订阅请求进行去重。如果有多个组件使用相同的键，它们将共享相同的订阅。当最后一个使用该键的组件卸载时，订阅将被关闭。这意味着如果您有多个使用相同键的组件，它们都将接收到相同的数据。并且每个 key 只有一个对实时数据源的订阅。"
+    }
+  },
+  "/docs/typescript.html": {
+    "title": "TypeScript",
+    "data": {
+      "": "SWR 对于使用 TypeScript 编写的 app 是友好的，开箱即用，类型安全。",
+      "basic-usage#基本用法": "默认情况下，SWR 会从 key 推断出 fetcher 的参数类型，因此你可以自动获得首选类型。",
+      "useswr#useSWR": "你还可以显式地指定 key 和 fetcher 参数的类型。\n默认情况下，在 fetcher 函数内部抛出的错误具有 any 类型。该类型也可以明确指定。",
+      "useswrinfinite#useSWRInfinite": "同样适用于 swr/infinite，你可以依靠自动类型推断或自己显式地指定类型。",
+      "useswrsubscription#useSWRSubscription": "内联的 subscribe 函数，手动指定 next 类型为 SWRSubscriptionOptions 的示例代码：\n使用 SWRSubscription 声明 subscribe 函数的示例代码：",
+      "generics#泛型": "指定 data 的类型很容易。默认情况下，它将使用 fetcher 的返回类型（未就绪状态为 undefined）作为 data 的类型，但你也可以将其作为参数传递：\n如果要为 SWR 的其他选项添加类型，你也可以直接导入这些类型：",
+      "middleware-types#中间件类型": "你可以导入一些额外的类型定义，以帮助你向自定义的中间件添加类型。"
+    }
+  },
+  "/examples/basic.html": {
+    "title": "基本用法",
+    "data": {}
+  },
+  "/examples/error-handling.html": {
+    "title": "错误处理",
+    "data": {}
+  },
+  "/examples/infinite-loading.html": {
+    "title": "无限加载",
+    "data": {}
+  },
+  "/examples/optimistic-ui.html": {
+    "title": "Optimistic UI",
+    "data": {}
+  },
+  "/examples/ssr.html": {
+    "title": "Next.js SSR",
+    "data": {}
+  },
+  "/examples/subscription.html": {
+    "title": "Subscription",
+    "data": {}
+  },
+  "/": {
+    "title": "用于数据请求的 React Hooks 库",
+    "data": {
+      "": "“SWR” 这个名字来自于 stale-while-revalidate：一种由 HTTP RFC 5861 推广的 HTTP 缓存失效策略。这种策略首先从缓存中返回数据（过期的），同时发送 fetch 请求（重新验证），最后得到最新数据。\n使用 SWR，组件将会不断地、自动获得最新数据流。\nUI 也会一直保持快速响应。\n入门 · 示例 · 博客 · GitHub 仓库",
+      "overview#概览": "该示例中，useSWR hook 接受一个字符串 key 和一个函数 fetcher。key 是数据的唯一标识符（通常是 API URL），并传递给 fetcher。fetcher 可以是任何返回数据的异步函数，你可以使用原生的 fetch 或 Axios 之类的工具。基于请求的状态，这个 hook 返回 2 个值：data 和 error。",
+      "features#特性": "仅需一行代码，你就可以简化项目中数据请求的逻辑，并立即拥有以下这些不可思议的特性：\n极速、轻量、可重用的 数据请求\n内置 缓存 和重复请求去除\n实时 体验\n传输和协议不可知\n支持 SSR / ISR / SSG\n支持 TypeScript\nReact Native\nSWR 涵盖了性能，正确性和稳定性的各个方面，以帮你建立更好的体验：\n快速页面导航\n间隔轮询\n数据依赖\n聚焦时重新验证\n网络恢复时重新验证\n本地缓存更新 (Optimistic UI)\n智能错误重试\n分页和滚动位置恢复\nReact Suspense\n以及 更多。",
+      "community#社区": "SWR 由 Next.js（React 框架）背后的同一团队创建。\n在 Twitter 上关注 @vercel 未来项目更新欢迎加入 GitHub 上的讨论！"
+    }
+  },
+  "/examples/auth.html": {
+    "title": "身份验证",
+    "data": {}
+  },
+  "/blog/swr-v2.html": {
+    "title": "SWR 2.0 发布",
+    "data": {
+      "": "我们很高兴宣布 SWR 2.0 的发布，SWR 是一款主流的 React 数据请求库，它使组件能够获取、缓存及更改数据，并使 UI 能随时间变化保持最新的数据。在新版本中包含了很多优化和新功能，例如新的数据更改 API、经过优化的乐观 UI 功能、新的 DevTools、以及对并发渲染的更好支持。衷心感谢所有使这个版本成为可能的贡献者和维护者。",
+      "mutation-and-optimistic-ui#数据更改和乐观 UI": "",
+      "useswrmutation#useSWRMutation": "数据更改（Mutation）是数据请求过程中非常重要的一部分，它使你可以修改本地或者远程的数据。我们目前使用的 mutate API 允许你手动重新验证或更新资源。在 SWR 2.0 中，新的 hook useSWRMutation 使用了声明式的 API ，使更改远程数据更加简单。你可以使用 hook 设置一个数据更改，并在随后触发它。\n上面的例子中定义了一个影响 /api/user 资源的 sendRequest 数据更改。与 useSWR 不同，useSWRMutation 并不会在渲染时立即发送请求，而是会返回一个 trigger 函数，之后你可以手动调用该函数触发数据更改。sendRequest 函数会在按钮被点击时触发，并传入额外的参数 { username: 'johndoe' }。isMutating 的值会被设置为 true 直到数据更改的请求完成。此外，这个新的 hook 还解决了数据更改可能带来的其他问题:\n当数据发生变化时，乐观地更新 UI\n在数据更改失败时自动回滚\n避免了 useSWR 和同一资源的其他数据更改之间任何潜在的竞态条件。\n数据更改完成后，填充 useSWR 缓存。\n...\n通过阅读 文档 或阅读接下来的几节，你可以找到更加深入的 API 参考和示例。",
+      "optimistic-ui#乐观 UI": "乐观 UI 是一种优秀的模型，用于创建让人感觉快速和敏捷的网站；然而，它可能很难正确的去实现。SWR 2.0 增加了一些强大的新选项，使乐观 UI 的实现更加容易。假设我们有一个 API 用于添加一个新的待办事项到待办列表中，并将它发送到服务端：\n在我们的 UI 中，我们使用 useSWR 这个 hook 去展示待办列表，其中的 \"Add New Item\" 按钮用于触发这个请求并要求 SWR 通过 mutate() 重新获取数据：\n然而，await addNewTodo(...) 请求可能会特别慢。当它正在请求时，用户看到仍然是旧的列表，即使我们已经知道新的列表会是什么样子。有了新的 optimisticData 选项，我们可以在服务端响应之前，乐观地展示新的列表：\nSWR 将立即用 optimisticData 值去更新 data，然后将请求发送到服务端。一旦请求完成，SWR 将重新验证该资源以确保它是最新的。像许多 API 一样，如果 addNewTodo(...) 请求会从服务端返回最新的数据，我们也可以直接显示这个结果（而不是开始一个新的重新验证）! 还有一个新的 populateCache 选项，告诉 SWR 用 mutate 的响应去更新本地数据：\n同时，我们不需要在请求后进行重新验证了，因为响应的数据来自真实的数据源，我们可以使用 revalidate 选项禁用它：\n最后，如果 addNewTodo(...) 因为意外情况失败了，我们可以通过将 rollbackOnError 设置为 true（该选项默认开启）以回滚刚刚设置的乐观数据（[...data, 'New Item']）。一旦出现这种情况，SWR 会将 data 回滚为上一次的值：\n所有 API 都在新的 useSWRMutationhook hook 中得到支持。想要了解更多关于它们的信息，你可以查看我们的 文档，这里有一个 demo 用于演示这种行为:",
+      "mutate-multiple-keys#多个 key 数据更改": "全局 mutate API 现在接受一个 filter 函数，您可以在其中进行特定 key 的数据更改或重新验证。这对于”使所有缓存的数据失效”之类的用例非常有帮助。要了解更多信息，可以阅读文档中的 更改多项数据。",
+      "swr-devtools#SWR 开发者工具": "SWRDevTools 是一个用于帮助你调试你的 SWR 缓存及请求结果的浏览器拓展程序。请查看我们的 devtools 查结，了解如何在你的应用程序中使用 devtools。",
+      "preloading-data#预加载数据": "预加载数据可以极大地改善用户体验。如果你知道某个资源稍后将在应用程序被使用，那么你可以使用新的 preload API 提前开始请求它：\n在这个例子中， preload API 在全局作用域中被调用。这意味着我们在 React 开始渲染之前就开始预加载资源。\n当 Profile 组件被渲染时，数据可能已经可用。如果它还在进行中，useSWR 钩子将复用那个正在进行的预加载请求，而不是启动一个新的请求。preload API 也可以用在为另一个可能被渲染的页面预加载数据的情况。关于使用 SWR 预取数据的更多信息可以在这里找到。",
+      "isloading#isLoading": "isLoading 是 useSWR 返回的一个新的状态，它表示请求仍在进行中，并且还没有加载数据。在之前，isValidating 状态同时代表初始加载状态和重新验证状态，所以我们必须检查 data 和 error 是否都为 undefined，以确定它是否为初始加载状态。现在，你可以直接使用 isLoading 的值来渲染一个加载信息。\n注意 isValidating 仍然存在，所以你依然可以用它来显示重新验证的加载指示器。\n我们增加了新的 理解 SWR 页面来描述 SWR 如何返回值，其中包括 isValidating 和 isLoading 的区别，以及如何结合它们来改善用户体验。",
+      "preserving-previous-state#保存以前的状态": "新增加了 keepPreviousData 选项，它允许你保留之前获取的数据。当你根据实时的用户操作获取数据时可以极大地改善用户体验。例如在实时搜索功能中，资源的 `key' 会不断变化：\n你可以在 CodeSandbox 上查看完整代码，在这里了解更多信息。",
+      "extending-configurations#扩展配置": "SWRConfig 现在可以接受一个函数值。当你有多级的 <SWRConfig> 时，内部会接收父级配置并返回一个新的配置。这一变化使得在大型代码库中配置 SWR 更加灵活。更多信息可以在这里找到。",
+      "improved-react-18-support#优化了对 React 18 的支持": "SWR 已经更新了其内部代码，以便在 React 18 中使用 useSyncExternalStore 和 startTransition 这两个 API。这确保了在并发渲染 UI 时的强一致性。这一变化不需要修改任何用户代码，所有开发者都可以直接受益。SWR 2.0 所有的新功能仍然可以与 React 16 和 17 兼容。",
+      "migration-guide#迁移指南": "",
+      "fetcher-no-longer-accepts-multiple-arguments#Fetcher 不再接受多个参数": "key 现在作为一个单独的参数传递",
+      "global-mutate-no-longer-accepts-a-getkey-function#全局数据更改不再接受 getKey 函数": "在之前，你可以向全局的 mutate 传递一个返回 key 的函数。而现在，如果你向全局 mutate 传入一个函数，它会被当作一个过滤函数。",
+      "new-required-property-keys-for-cache-interface#Cache Interface 新增必选属性 keys()": "当你使用自己的缓存实现时，Cache 接口新增了一个 keys() 方法来返回缓存对象中的所有 key，类似于 JavaScript 的 Map 实例。",
+      "changed-cache-internal-structure#改变了缓存的内部结构": "缓存数据的内部结构将变为一个持有所有当前状态的对象。\n你不应该直接写入缓存，这可能会导致未定义行为。",
+      "swrconfigdefault-is-renamed-as-swrconfigdefaultvalue#SWRConfig.default 重命名为 SWRConfig.defaultValue": "SWRConfig.defaultValue 是一个用于获取默认 SWR 配置的属性",
+      "type-infinitefetcher-is-renamed-as-swrinfinitefetcher#Type InfiniteFetcher 重命名为 SWRInfiniteFetcher": "",
+      "avoid-suspense-on-server#避免在服务端使用 Suspense": "如果你想要在服务端使用 SWR suspense: true，包括 Next.js 的预渲染，那么你必须通过 fallbackData 或 fallback 提供初始数据。今天这意味着你不能在服务端使用 Susense 获取数据了。你的另外两种选则是完全在客户端获取数据，或者使用框架获取数据(就像 Next.js 中的 getStaticProps 那样)。",
+      "es2018-as-the-build-target#以 ES2018 为构建目标": "如果你想支持 IE 11，你必须在你的框架或 bundler 指定构建目标为 ES5。这一变化使 SSR 的性能得到了优化，并使构建产物的体积变小。",
+      "changelog#更新日志": "在 GitHub 查看完整日志。",
+      "the-future--thank-you#展望未来 & 致谢！": "随着 Next.js 13 的新发布 ，我们看到了很多令人兴奋的新特性和 React 生态系统中的范式转变：React Server Components，streaming SSR，async components，以及 use hook 。其中许多都与数据获取有关，有一部分与 SWR 有着相同的使用场景。然而 SWR 项目的目标仍然不变。我们希望它成为一个轻量级的、框架无关的、有一点 固执（例如：聚焦时重新验证）的落地库。我们不想成为一个标准的解决方案，而是想专注于创新，使用户体验变得更好。同时我们也在研究如何利用 React 的这些新能力来改进 SWR。我们要感谢 143 贡献者（+106 文档贡献者）中的每一位，以及那些给我们提供帮助或反馈的人。特别感谢 Toru Kobayashi 在 DevTools 和文档方面所做的工作--没有你，我们不可能做到这一点!"
+    }
+  },
+  "/docs/suspense.html": {
+    "title": "Suspense",
+    "data": {
+      "": "你可以启用 suspense 选项，从而让 SWR 和 React Suspense 一起使用：\n请注意，SWR 的 suspense 选项并不支持在渲染过程中发生改变。\n在 Suspense 模式下，data 总是请求响应（因此你无需检查它是否是 undefined）。但如果发生错误，则需要使用 错误边界 来捕获它：\nSuspense 模式会在数据准备就绪前暂停渲染，这意味着它很容易导致请求瀑布问题。为了避免这种情况，应该在渲染之前预请求获取资源。更多信息",
+      "note-with-conditional-fetching#注意：使用条件请求": "通常，当启用 suspense 时，可以确保 data 在渲染时始终是准备就绪的：\n但是，当它与条件请求或依赖请求一起使用时，如果请求被暂停，data 将会是 undefined：\n如果你想阅读有关该限制的更多技术细节，请查看这里的讨论。",
+      "server-side-rendering#服务端渲染": "当在服务端渲染（包括 Next.js 中的预渲染功能）中使用 suspense 模式时，必须通过 fallbackData 或 fallback 提供初始数据，这意味着你不能使用 Suspense 在服务器端获取数据，而是完全使用客户端的数据请求，或者通过框架级的数据获取方法（例如 Next.js 中的 getStaticProps）获取数据，更多的讨论可以在这里找到。"
+    }
+  },
+  "/docs/with-nextjs.html": {
+    "title": "与 Next.js 一同使用",
+    "data": {
+      "app-dir#App Router": "",
+      "rsc#Server Components": "在 Next.js App Router 中，所有的组件都被默认视为 React Server Components (RSC) 。在 RSC 中您只能 从SWR 引入序列化 Key API\n您不能从 SWR 引入其他 API ，因为它们在 RSC 中不可用。",
+      "client-components#Client Components": "您可以直接用 'use client' 标记您的组件或者从 Client Components 引入 SWR ，两种方法都允许您使用 SWR 提供的客户端数据获取 Hooks。\n如果您需要在 Server Components layout 或者 page 中使用 SWRConfig 配置公共设置，请创建一个独立的 Provider Client Component 以初始化 Provider 和配置，然后在 Server Component Pages 中使用它。",
+      "client-side-data-fetching#客户端数据获取": "如果您的页面包含一些频繁更新的数据，而您并不需要预渲染这些数据，SWR 将非常适用并且并不需要特殊的配置：只需要引入 useSWR 然后在任何需要使用数据的组件中使用这个 Hook以下是它的工作方式：\n首先，立即在没有数据的情况下展示页面。您可以显示缺失数据的加载状况。\n然后，在客户端获取数据，并在数据准备好时展示它们.\n例如，这个方法在用户仪表盘页面上工作得很好。因为仪表板是不公开、用户特定的页面，与 SEO 无关并且页面不需要预渲染。数据频繁更新，需要在请求时获取。",
+      "pre-rendering-with-default-data#带有默认数据的预渲染": "如果页面需要预渲染，Next.js 支持 两种预渲染方式:\n静态生成 (SSG) and 服务端渲染 (SSR).通过使用 SWR, 您可以为了 SEO 预渲染页面, 并同时在客户端享受缓存、重新验证、焦点追踪、定时重新获取等特性。您可以使用 SWRConfig 的 fallback 选项来将预获取的数据作为所有 SWR Hook 的初始值。使用 getStaticProps 的例子：\n该页面仍然是预先生成，SEO 友好的，并且能够快速反应。然而该页面在客户端侧仍然完全由 SWR 驱动。数据仍然是动态的，且可以自动更新。\nArticle 组件将先渲染预先生成的数据，并且在页面水合完成后将再次获取最新数据以保持数据最新",
+      "complex-keys#复杂关键字": "useSWR 可以与 array 和 function 类型的 key 一同使用. 若要通过这些类型的 key 使用预先获取的数据，需要用 unstable_serialize 序列化 fallback key."
+    }
+  }
+}
